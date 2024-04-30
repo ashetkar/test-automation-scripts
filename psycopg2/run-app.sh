@@ -31,4 +31,6 @@ python3 test_topologyawareloadbalancer.py || EXIT_STATUS=$?
 
 python3 test_misc.py || EXIT_STATUS=$?
 
+deactivate
+
 exit $EXIT_STATUS

@@ -1,7 +1,6 @@
 #!/bin/bash
 set -e
 
-deactivate
 rm -rf $WORKSPACE/environments/psycopg2-test
 
 # Destroy YugabyteDB cluster
