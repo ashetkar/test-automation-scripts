@@ -10,9 +10,9 @@ echo "Editing the config file"
 
 rm src/test/resources/harness-config.yml && cp $INTEGRATIONS_HOME_DIRECTORY/liquibase/harness-config.yml src/test/resources
 
-echo "Running tests"
-
-JAVA_HOME=/usr/lib/jvm/zulu-11.jdk mvn clean install
-JAVA_HOME=/usr/lib/jvm/zulu-11.jdk mvn -ntp -Dtest=FoundationalExtensionHarnessSuite test > $ARTIFACTS_PATH/liquibasefoundationaltest.txt
+echo "Building the Liquibase tests"
+JAVA_HOME=/usr/lib/jvm/zulu-11.jdk mvn -ntp -q clean install
+echo "Running the Liquibase tests"
+JAVA_HOME=/usr/lib/jvm/zulu-11.jdk mvn -ntp -Dtest=FoundationalExtensionHarnessSuite test
 
 ! grep "BUILD FAILURE" $ARTIFACTS_PATH/liquibasefoundationaltest.txt
