@@ -9,7 +9,7 @@ $YUGABYTE_HOME_DIRECTORY/bin/ysqlsh -f ./src/test/resources/docker/yugabytedb-in
 echo "Editing the config file"
 
 rm src/test/resources/harness-config.yml && cp $INTEGRATIONS_HOME_DIRECTORY/liquibase/harness-config.yml src/test/resources
-sed -i '' 's@${YUGABYTE_RELEASE_NUMBER}@'"$YUGABYTE_RELEASE_NUMBER"'@' src/test/resources/harness-config.yml
+sed -i 's@${YUGABYTE_RELEASE_NUMBER}@'"$YUGABYTE_RELEASE_NUMBER"'@' src/test/resources/harness-config.yml
 
 echo "Building the Liquibase tests"
 JAVA_HOME=/usr/lib/jvm/zulu-11.jdk mvn -ntp -q clean install
