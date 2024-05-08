@@ -14,11 +14,24 @@ sed -i 's@${YUGABYTE_RELEASE_NUMBER}@'"$YUGABYTE_RELEASE_NUMBER"'@' src/test/res
 echo "Building the Liquibase tests"
 JAVA_HOME=/usr/lib/jvm/zulu-11.jdk mvn -ntp -q clean install
 echo "Running the Liquibase tests"
-JAVA_HOME=/usr/lib/jvm/zulu-11.jdk mvn -ntp -Dtest=FoundationalExtensionHarnessSuite test > $ARTIFACTS_PATH/liquibasefoundationaltest.txt
+JAVA_HOME=/usr/lib/jvm/zulu-11.jdk mvn -ntp test > $ARTIFACTS_PATH/liquibase_yugabytedb_test_report.txt
+JAVA_HOME=/usr/lib/jvm/zulu-11.jdk mvn -ntp -Dtest=FoundationalExtensionHarnessSuite test > $ARTIFACTS_PATH/liquibase_foundational_test_report.txt
+JAVA_HOME=/usr/lib/jvm/zulu-11.jdk mvn -ntp -Dtest=AdvancedExtensionHarnessSuite test > $ARTIFACTS_PATH/liquibase_advanced_test_report.txt
 
-if [ $(grep -c "BUILD SUCCESS" $ARTIFACTS_PATH/liquibasefoundationaltest.txt) -eq 0 ]
+echo "Checking the Liquibase test reports"
+if [ $(grep -c "BUILD SUCCESS" $ARTIFACTS_PATH/liquibase_yugabytedb_test_report.txt) -eq 0 ]
 then
-  cat $ARTIFACTS_PATH/liquibasefoundationaltest.txt
+  cat $ARTIFACTS_PATH/liquibase_yugabytedb_test_report.txt
+fi
+if [ $(grep -c "BUILD SUCCESS" $ARTIFACTS_PATH/liquibase_foundational_test_report.txt) -eq 0 ]
+then
+  cat $ARTIFACTS_PATH/liquibase_foundational_test_report.txt
+fi
+if [ $(grep -c "BUILD SUCCESS" $ARTIFACTS_PATH/liquibase_advanced_test_report.txt) -eq 0 ]
+then
+  cat $ARTIFACTS_PATH/liquibase_advanced_test_report.txt
 fi
 
-! grep "BUILD FAILURE" $ARTIFACTS_PATH/liquibasefoundationaltest.txt
+! grep "BUILD FAILURE" $ARTIFACTS_PATH/liquibase_yugabytedb_test_report.txt
+! grep "BUILD FAILURE" $ARTIFACTS_PATH/liquibase_foundational_test_report.txt
+! grep "BUILD FAILURE" $ARTIFACTS_PATH/liquibase_advanced_test_report.txt
