@@ -1,6 +1,6 @@
 #!/bin/bash
 
-printf '%s\n' "------------- START new_tool run ------------------"
+printf '%s\n' "------------- START Django test run ------------------"
 TOOL_VERSION=
 
 CURRENT_DIR=`dirname $0`
@@ -22,7 +22,7 @@ if [[ "$SUCCESS" == "0" ]]; then
   summary="PASS"
 fi
 printf '%s\n' $summary
-printf '%s\n' "------------- END new_tool run ------------------"
+printf '%s\n' "------------- END Django test run ------------------"
 
 cd ..
 
