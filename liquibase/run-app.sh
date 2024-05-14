@@ -3,6 +3,7 @@ set -e
 
 echo "Cloning the liquibase extension repository"
 
+rm -rf liquibase-yugabytedb
 git clone -q git@github.com:liquibase/liquibase-yugabytedb.git && cd liquibase-yugabytedb
 $YUGABYTE_HOME_DIRECTORY/bin/ysqlsh -f ./src/test/resources/docker/yugabytedb-init.sql
 
