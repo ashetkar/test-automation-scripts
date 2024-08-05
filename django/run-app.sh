@@ -19,7 +19,7 @@ export YB_VERSION=$version
 export DJANGO_TESTS_DIR="django_tests_dir"
 mkdir -p $DJANGO_TESTS_DIR
 
-git clone git@github.com:yugabyte/yb-django.git --branch jenkins-test-failure
+git clone git@github.com:yugabyte/yb-django.git
 
 cd yb-django
 
