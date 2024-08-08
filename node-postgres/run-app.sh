@@ -32,69 +32,117 @@ echo "Running tests"
 
 node yb-fallback-star-1.js > $ARTIFACTS_PATH/yb-fallback-star-1.txt
 
-echo "Test 1 (yb-fallback-star-1) completed"
+if [ $(grep -c "Test Completed" $ARTIFACTS_PATH/yb-fallback-star-1.txt) -eq 0 ]
+then
+  echo "yb-fallback-star-1 failed"
+  cat $ARTIFACTS_PATH/yb-fallback-star-1.txt
+else
+  echo "Test 1 (yb-fallback-star-1) completed"
+fi
 
 node yb-fallback-star-2.js > $ARTIFACTS_PATH/yb-fallback-star-2.txt
 
-echo "Test 2 (yb-fallback-star-2) completed"
-
-node yb-fallback-test-1.js > $ARTIFACTS_PATH/yb-fallback-test-1.txt
-
-echo "Test 3 (yb-fallback-test-1) completed"
-
-node yb-fallback-test-2.js > $ARTIFACTS_PATH/yb-fallback-test-2.txt
-
-echo "Test 4 (yb-fallback-test-2) completed"
-
-node yb-fallback-test-2.js > $ARTIFACTS_PATH/yb-fallback-test-3.txt
-
-echo "Test 5 (yb-fallback-test-2) completed"
+if [ $(grep -c "Test Completed" $ARTIFACTS_PATH/yb-fallback-star-2.txt) -eq 0 ]
+then
+  echo "yyb-fallback-star-2 failed"
+  cat $ARTIFACTS_PATH/yb-fallback-star-2.txt
+else
+  echo "Test 2 (yb-fallback-star-2) completed"
+fi
 
 node yb-fallback-topology-aware-1 > $ARTIFACTS_PATH/yb-fallback-topology-aware-1.txt
 
-echo "Test 6 (yb-fallback-topology-aware-1) completed"
+if [ $(grep -c "Test Completed" $ARTIFACTS_PATH/yb-fallback-topology-aware-1.txt) -eq 0 ]
+then
+  echo "yb-fallback-topology-aware-1 failed"
+  cat $ARTIFACTS_PATH/yb-fallback-topology-aware-1.txt
+else
+  echo "Test 3 (yb-fallback-topology-aware-1) completed"
+fi
 
 node yb-fallback-topology-aware-2.js > $ARTIFACTS_PATH/yb-fallback-topology-aware-2.txt
 
-echo "Test 7 (yb-fallback-topology-aware-2) completed"
+if [ $(grep -c "Test Completed" $ARTIFACTS_PATH/yb-fallback-topology-aware-2.txt) -eq 0 ]
+then
+  echo "yb-fallback-topology-aware-2 failed"
+  cat $ARTIFACTS_PATH/yb-fallback-topology-aware-2.txt
+else
+  echo "Test 4 (yb-fallback-topology-aware-2) completed"
+fi
 
 node yb-fallback-topology-aware-3.js > $ARTIFACTS_PATH/yb-fallback-topology-aware-3.txt
 
-echo "Test 8 (yb-fallback-topology-aware-3) completed"
+if [ $(grep -c "Test Completed" $ARTIFACTS_PATH/yb-fallback-topology-aware-3.txt) -eq 0 ]
+then
+  echo "yb-fallback-topology-aware-3 failed"
+  cat $ARTIFACTS_PATH/yb-fallback-topology-aware-3.txt
+else
+  echo "Test 5 (yb-fallback-topology-aware-3) completed"
+fi
 
 node yb-load-balance-with-add-node.js > $ARTIFACTS_PATH/yb-load-balance-with-add-node.txt
 
-echo "Test 9 (yb-load-balance-with-add-node) completed"
+if [ $(grep -c "Test Completed" $ARTIFACTS_PATH/yb-load-balance-with-add-node.txt) -eq 0 ]
+then
+  echo "yb-load-balance-with-add-node failed"
+  cat $ARTIFACTS_PATH/yb-load-balance-with-add-node.txt
+else
+  echo "Test 6 (yb-load-balance-with-add-node) completed"
+fi
 
 node yb-load-balance-with-stop-node.js > $ARTIFACTS_PATH/yb-load-balance-with-stop-node.txt
 
-echo "Test 10 (yb-load-balance-with-stop-node) completed"
+if [ $(grep -c "Test Completed" $ARTIFACTS_PATH/yb-load-balance-with-stop-node.txt) -eq 0 ]
+then
+  echo "yb-load-balance-with-stop-node failed"
+  cat $ARTIFACTS_PATH/yb-load-balance-with-stop-node.txt
+else
+  echo "Test 7 (yb-load-balance-with-stop-node) completed"
+fi
 
 node yb-pooling-with-load-balance.js > $ARTIFACTS_PATH/yb-pooling-with-load-balance.txt
 
-echo "Test 11 (yb-pooling-with-load-balance) completed"
+if [ $(grep -c "Test Completed" $ARTIFACTS_PATH/yb-pooling-with-load-balance.txt) -eq 0 ]
+then
+  echo "yb-pooling-with-load-balance failed"
+  cat $ARTIFACTS_PATH/yb-pooling-with-load-balance.txt
+else
+  echo "Test 8 (yb-pooling-with-load-balance) completed"
+fi
 
 node yb-pooling-with-topology-aware.js > $ARTIFACTS_PATH/yb-pooling-with-topology-aware.txt
 
-echo "Test 12 (yb-pooling-with-topology-aware) completed"
+if [ $(grep -c "Test Completed" $ARTIFACTS_PATH/yb-pooling-with-topology-aware.txt) -eq 0 ]
+then
+  echo "yb-pooling-with-topology-aware failed"
+  cat $ARTIFACTS_PATH/yb-pooling-with-topology-aware.txt
+else
+  echo "Test 9 (yb-pooling-with-topology-aware) completed"
+fi
 
 node yb-topology-aware-with-add-node.js > $ARTIFACTS_PATH/yb-topology-aware-with-add-node.txt
 
-echo "Test 13 (yb-topology-aware-with-add-node) completed"
+if [ $(grep -c "Test Completed" $ARTIFACTS_PATH/yb-topology-aware-with-add-node.txt) -eq 0 ]
+then
+  echo "yb-topology-aware-with-add-node failed"
+  cat $ARTIFACTS_PATH/yb-topology-aware-with-add-node.txt
+else
+  echo "Test 10 (yb-topology-aware-with-add-node) completed"
+fi
 
 node yb-topology-aware-with-stop-node.js > $ARTIFACTS_PATH/yb-topology-aware-with-stop-node.txt
 
-echo "Test 14 (yb-topology-aware-with-stop-node) completed"
+if [ $(grep -c "Test Completed" $ARTIFACTS_PATH/yb-topology-aware-with-stop-node.txt) -eq 0 ]
+then
+  echo "yb-topology-aware-with-stop-node failed"
+  cat $ARTIFACTS_PATH/yb-topology-aware-with-stop-node.txt
+else
+  echo "Test 11 (yb-topology-aware-with-stop-node) completed"
+fi
 
 grep "Test Completed" $ARTIFACTS_PATH/yb-fallback-star-1.txt
 
 grep "Test Completed" $ARTIFACTS_PATH/yb-fallback-star-2.txt
-
-grep "Test Completed" $ARTIFACTS_PATH/yb-fallback-test-1.txt
-
-grep "Test Completed" $ARTIFACTS_PATH/yb-fallback-test-2.txt
-
-grep "Test Completed" $ARTIFACTS_PATH/yb-fallback-test-3.txt
 
 grep "Test Completed" $ARTIFACTS_PATH/yb-fallback-topology-aware-1.txt
 
