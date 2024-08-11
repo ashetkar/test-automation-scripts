@@ -13,7 +13,7 @@ export PYTHONUNBUFFERED=1
 #Get YugabyteDB version and set it as environment variable
 
 output=$($YUGABYTE_HOME_DIRECTORY/bin/ysqlsh -c "SELECT version();")
-version=$(echo "$output" | sed -n 's/^.*PostgreSQL 11\.2-YB-\([^ ]*\).*$/\1/p')
+version=$(echo "$output" | sed -n 's/^.*PostgreSQL [^ ]*-YB-\([^ ]*\).*$/\1/p')
 export YB_VERSION=$version
 
 export DJANGO_TESTS_DIR="django_tests_dir"
