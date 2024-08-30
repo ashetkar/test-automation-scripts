@@ -25,27 +25,27 @@ export YB_PATH="$YUGABYTE_HOME_DIRECTORY"
 
 echo "Running examples"
 
-cargo run --bin ybsql_load_balance > $ARTIFACTS_PATH/rust_ybsql_load_balance.txt
+cargo run --bin ybsql_load_balance 2>&1 | tee $ARTIFACTS_PATH/rust_ybsql_load_balance.txt
 
 echo "Example 1 (ybsql_load_balance) completed"
 
-cargo run --bin ybsql_fallback_example1 > $ARTIFACTS_PATH/rust_ybsql_fallback_example1.txt
+cargo run --bin ybsql_fallback_example1 2>&1 | tee $ARTIFACTS_PATH/rust_ybsql_fallback_example1.txt
 
 echo "Example 2 (ybsql_fallback_example1) completed"
 
-cargo run --bin ybsql_fallback_example2 > $ARTIFACTS_PATH/rust_ybsql_fallback_example2.txt
+cargo run --bin ybsql_fallback_example2 2>&1 | tee $ARTIFACTS_PATH/rust_ybsql_fallback_example2.txt
 
 echo "Example 3 (ybsql_fallback_example2) completed"
 
-cargo run --bin ybsql_fallback_example3 > $ARTIFACTS_PATH/rust_ybsql_fallback_example3.txt
+cargo run --bin ybsql_fallback_example3 2>&1 | tee $ARTIFACTS_PATH/rust_ybsql_fallback_example3.txt
 
 echo "Example 4 (ybsql_fallback_example3) completed"
 
-cargo run --bin ulb_multithread > $ARTIFACTS_PATH/rust_ulb_multithread.txt
+cargo run --bin ulb_multithread 2>&1 | tee $ARTIFACTS_PATH/rust_ulb_multithread.txt
 
 echo "Example 5 (ulb_multithread) completed"
 
-cargo run --bin talb_multithread > $ARTIFACTS_PATH/rust_talb_multithread.txt
+cargo run --bin talb_multithread 2>&1 | tee $ARTIFACTS_PATH/rust_talb_multithread.txt
 
 echo "Example 6 (talb_multithread) completed"
 

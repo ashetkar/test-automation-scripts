@@ -30,59 +30,59 @@ export YB_PATH="$YUGABYTE_HOME_DIRECTORY"
 
 echo "Running tests"
 
-node yb-fallback-star-1.js > $ARTIFACTS_PATH/yb-fallback-star-1.txt
+node yb-fallback-star-1.js 2>&1 | tee $ARTIFACTS_PATH/yb-fallback-star-1.txt
 
 echo "Test 1 (yb-fallback-star-1) completed"
 
-node yb-fallback-star-2.js > $ARTIFACTS_PATH/yb-fallback-star-2.txt
+node yb-fallback-star-2.js 2>&1 | tee $ARTIFACTS_PATH/yb-fallback-star-2.txt
 
 echo "Test 2 (yb-fallback-star-2) completed"
 
-node yb-fallback-test-1.js > $ARTIFACTS_PATH/yb-fallback-test-1.txt
+node yb-fallback-test-1.js 2>&1 | tee $ARTIFACTS_PATH/yb-fallback-test-1.txt
 
 echo "Test 3 (yb-fallback-test-1) completed"
 
-node yb-fallback-test-2.js > $ARTIFACTS_PATH/yb-fallback-test-2.txt
+node yb-fallback-test-2.js 2>&1 | tee $ARTIFACTS_PATH/yb-fallback-test-2.txt
 
 echo "Test 4 (yb-fallback-test-2) completed"
 
-node yb-fallback-test-2.js > $ARTIFACTS_PATH/yb-fallback-test-3.txt
+node yb-fallback-test-2.js 2>&1 | tee $ARTIFACTS_PATH/yb-fallback-test-3.txt
 
 echo "Test 5 (yb-fallback-test-2) completed"
 
-node yb-fallback-topology-aware-1 > $ARTIFACTS_PATH/yb-fallback-topology-aware-1.txt
+node yb-fallback-topology-aware-1 2>&1 | tee $ARTIFACTS_PATH/yb-fallback-topology-aware-1.txt
 
 echo "Test 6 (yb-fallback-topology-aware-1) completed"
 
-node yb-fallback-topology-aware-2.js > $ARTIFACTS_PATH/yb-fallback-topology-aware-2.txt
+node yb-fallback-topology-aware-2.js 2>&1 | tee $ARTIFACTS_PATH/yb-fallback-topology-aware-2.txt
 
 echo "Test 7 (yb-fallback-topology-aware-2) completed"
 
-node yb-fallback-topology-aware-3.js > $ARTIFACTS_PATH/yb-fallback-topology-aware-3.txt
+node yb-fallback-topology-aware-3.js 2>&1 | tee $ARTIFACTS_PATH/yb-fallback-topology-aware-3.txt
 
 echo "Test 8 (yb-fallback-topology-aware-3) completed"
 
-node yb-load-balance-with-add-node.js > $ARTIFACTS_PATH/yb-load-balance-with-add-node.txt
+node yb-load-balance-with-add-node.js 2>&1 | tee $ARTIFACTS_PATH/yb-load-balance-with-add-node.txt
 
 echo "Test 9 (yb-load-balance-with-add-node) completed"
 
-node yb-load-balance-with-stop-node.js > $ARTIFACTS_PATH/yb-load-balance-with-stop-node.txt
+node yb-load-balance-with-stop-node.js 2>&1 | tee $ARTIFACTS_PATH/yb-load-balance-with-stop-node.txt
 
 echo "Test 10 (yb-load-balance-with-stop-node) completed"
 
-node yb-pooling-with-load-balance.js > $ARTIFACTS_PATH/yb-pooling-with-load-balance.txt
+node yb-pooling-with-load-balance.js 2>&1 | tee $ARTIFACTS_PATH/yb-pooling-with-load-balance.txt
 
 echo "Test 11 (yb-pooling-with-load-balance) completed"
 
-node yb-pooling-with-topology-aware.js > $ARTIFACTS_PATH/yb-pooling-with-topology-aware.txt
+node yb-pooling-with-topology-aware.js 2>&1 | tee $ARTIFACTS_PATH/yb-pooling-with-topology-aware.txt
 
 echo "Test 12 (yb-pooling-with-topology-aware) completed"
 
-node yb-topology-aware-with-add-node.js > $ARTIFACTS_PATH/yb-topology-aware-with-add-node.txt
+node yb-topology-aware-with-add-node.js 2>&1 | tee $ARTIFACTS_PATH/yb-topology-aware-with-add-node.txt
 
 echo "Test 13 (yb-topology-aware-with-add-node) completed"
 
-node yb-topology-aware-with-stop-node.js > $ARTIFACTS_PATH/yb-topology-aware-with-stop-node.txt
+node yb-topology-aware-with-stop-node.js 2>&1 | tee $ARTIFACTS_PATH/yb-topology-aware-with-stop-node.txt
 
 echo "Test 14 (yb-topology-aware-with-stop-node) completed"
 

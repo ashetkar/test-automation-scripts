@@ -15,9 +15,9 @@ sed -i 's@${YUGABYTE_RELEASE_NUMBER}@'"$YUGABYTE_RELEASE_NUMBER"'@' src/test/res
 echo "Building the Liquibase tests"
 JAVA_HOME=/usr/lib/jvm/zulu-11.jdk mvn -ntp -q clean install
 echo "Running the Liquibase tests"
-JAVA_HOME=/usr/lib/jvm/zulu-11.jdk mvn -ntp test > $ARTIFACTS_PATH/liquibase_yugabytedb_test_report.txt
-JAVA_HOME=/usr/lib/jvm/zulu-11.jdk mvn -ntp -Dtest=FoundationalExtensionHarnessSuite test > $ARTIFACTS_PATH/liquibase_foundational_test_report.txt
-JAVA_HOME=/usr/lib/jvm/zulu-11.jdk mvn -ntp -Dtest=AdvancedExtensionHarnessSuite test > $ARTIFACTS_PATH/liquibase_advanced_test_report.txt
+JAVA_HOME=/usr/lib/jvm/zulu-11.jdk mvn -ntp test 2>&1 | tee $ARTIFACTS_PATH/liquibase_yugabytedb_test_report.txt
+JAVA_HOME=/usr/lib/jvm/zulu-11.jdk mvn -ntp -Dtest=FoundationalExtensionHarnessSuite test 2>&1 | tee $ARTIFACTS_PATH/liquibase_foundational_test_report.txt
+JAVA_HOME=/usr/lib/jvm/zulu-11.jdk mvn -ntp -Dtest=AdvancedExtensionHarnessSuite test 2>&1 | tee $ARTIFACTS_PATH/liquibase_advanced_test_report.txt
 
 echo "Checking the Liquibase test reports"
 if [ $(grep -c "BUILD SUCCESS" $ARTIFACTS_PATH/liquibase_yugabytedb_test_report.txt) -eq 0 ]
