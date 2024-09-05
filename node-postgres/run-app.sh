@@ -32,6 +32,10 @@ echo "Exporting environment variable YB_PATH with the value of the path of the Y
 
 export YB_PATH="$YUGABYTE_HOME_DIRECTORY"
 
+echo "Exporting log level."
+
+export LOG_LEVEL="silly"
+
 echo "Running tests"
 
 node yb-fallback-star-1.js 2>&1 | tee $ARTIFACTS_PATH/yb-fallback-star-1.txt
