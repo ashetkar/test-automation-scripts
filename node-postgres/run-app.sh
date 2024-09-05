@@ -9,6 +9,10 @@ echo "Installing node-postgres smart driver pool package"
 
 npm install @yugabytedb/pg-pool
 
+echo "Installing winston logging package"
+
+npm install winston
+
 DIR="driver-examples"
 if [ -d "$DIR" ]; then
  echo "driver-examples repository is already present"
