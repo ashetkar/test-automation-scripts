@@ -5,7 +5,7 @@ DIR="driver-examples"
 if [ -d "$DIR" ]; then
   echo "driver-examples repository is already present"
   cd $DIR
-  git checkout master
+  git checkout rr-tests-jdbc
   git pull
 else
   echo "Cloning the driver-examples repository ..."
@@ -15,20 +15,49 @@ fi
 cd java/ysql-jdbc
 
 echo "Compiling the YSQL JDBC tests ..."
-mvn compile
+mvn clean compile
 
 echo "Running LoadBalanceConcurrencyExample ..."
-YBDB_PATH=<path/to/yugabytedb/installation/directory> mvn exec:java -Dexec.mainClass=com.yugabyte.examples.LoadBalanceConcurrencyExample > $ARTIFACTS_PATH/jdbc-concurrency.log
+YBDB_PATH=$YUGABYTE_HOME_DIRECTORY mvn exec:java -Dexec.mainClass=com.yugabyte.examples.LoadBalanceConcurrencyExample 2>&1 | tee jdbc-concurrency.log
 
 echo "Running TopologyAwareLBFallbackExample ..."
-YBDB_PATH=<path/to/yugabytedb/installation/directory> mvn exec:java -Dexec.mainClass=com.yugabyte.examples.TopologyAwareLBFallbackExample > $ARTIFACTS_PATH/jdbc-fallback.log
+YBDB_PATH=$YUGABYTE_HOME_DIRECTORY mvn exec:java -Dexec.mainClass=com.yugabyte.examples.TopologyAwareLBFallbackExample 2>&1 | tee jdbc-fallback.log
 
 echo "Running TopologyAwareLBFallback2Example ..."
-YBDB_PATH=<path/to/yugabytedb/installation/directory> mvn exec:java -Dexec.mainClass=com.yugabyte.examples.TopologyAwareLBFallback2Example > $ARTIFACTS_PATH/jdbc-fallback2.log
+YBDB_PATH=$YUGABYTE_HOME_DIRECTORY mvn exec:java -Dexec.mainClass=com.yugabyte.examples.TopologyAwareLBFallback2Example 2>&1 | tee jdbc-fallback2.log
 
-grep "" $ARTIFACTS_PATH/jdbc-concurrency.log
+echo "Running ReadReplicaSupportExample..."
+YBDB_PATH=$YUGABYTE_HOME_DIRECTORY mvn exec:java -Dexec.mainClass=com.yugabyte.ysql.ReadReplicaSupportExample 2>&1 | tee read-replica.log
 
-grep "" $ARTIFACTS_PATH/jdbc-fallback.log
+echo "Running ReadReplicaSupportHikariExample..."
+YBDB_PATH=$YUGABYTE_HOME_DIRECTORY mvn exec:java -Dexec.mainClass=com.yugabyte.ysql.ReadReplicaSupportHikariExample 2>&1 | tee read-replica-hikari.log
 
-grep "" $ARTIFACTS_PATH/jdbc-fallback2.log
+RESULT=0
+
+if [[ ! grep "BUILD SUCCESS" jdbc-concurrency.log ]]; then
+ echo "LoadBalanceConcurrencyExample failed!"
+ RESULT=1
+fi
+
+if [[ ! grep "BUILD SUCCESS" jdbc-fallback.log ]]; then
+ echo "TopologyAwareLBFallbackExample failed!"
+ RESULT=1
+fi
+
+if [[ ! grep "BUILD SUCCESS" jdbc-fallback2.log ]]; then
+ echo "TopologyAwareLBFallback2Example failed!"
+ RESULT=1
+fi
+
+if [[ ! grep "BUILD SUCCESS" read-replica.log ]]; then
+ echo "ReadReplicaSupportExample failed!"
+ RESULT=1
+fi
+
+if [[ !grep "BUILD SUCCESS" read-replica-hikari.log ]]; then
+ echo "ReadReplicaSupportHikariExample failed!"
+ RESULT=1
+fi
+
+exit $RESULT
 
