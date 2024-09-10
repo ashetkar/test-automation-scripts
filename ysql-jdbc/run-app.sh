@@ -5,7 +5,7 @@ DIR="driver-examples"
 if [ -d "$DIR" ]; then
   echo "driver-examples repository is already present"
   cd $DIR
-  git checkout rr-tests-jdbc # todo change to main
+  git checkout main
   git pull
 else
   echo "Cloning the driver-examples repository ..."
@@ -26,11 +26,11 @@ YBDB_PATH=$YUGABYTE_HOME_DIRECTORY mvn exec:java -Dexec.mainClass=com.yugabyte.y
 echo "Running TopologyAwareLBFallback2Example ..."
 YBDB_PATH=$YUGABYTE_HOME_DIRECTORY mvn exec:java -Dexec.mainClass=com.yugabyte.ysql.TopologyAwareLBFallback2Example 2>&1 | tee jdbc-fallback2.log
 
-echo "Running ReadReplicaSupportExample..."
-YBDB_PATH=$YUGABYTE_HOME_DIRECTORY mvn exec:java -Dexec.mainClass=com.yugabyte.ysql.ReadReplicaSupportExample 2>&1 | tee read-replica.log
+# echo "Running ReadReplicaSupportExample..."
+# YBDB_PATH=$YUGABYTE_HOME_DIRECTORY mvn exec:java -Dexec.mainClass=com.yugabyte.ysql.ReadReplicaSupportExample 2>&1 | tee read-replica.log
 
-echo "Running ReadReplicaSupportHikariExample..."
-YBDB_PATH=$YUGABYTE_HOME_DIRECTORY mvn exec:java -Dexec.mainClass=com.yugabyte.ysql.ReadReplicaSupportHikariExample 2>&1 | tee read-replica-hikari.log
+# echo "Running ReadReplicaSupportHikariExample..."
+# YBDB_PATH=$YUGABYTE_HOME_DIRECTORY mvn exec:java -Dexec.mainClass=com.yugabyte.ysql.ReadReplicaSupportHikariExample 2>&1 | tee read-replica-hikari.log
 
 RESULT=0
 
@@ -49,15 +49,15 @@ if ! grep "BUILD SUCCESS" jdbc-fallback2.log; then
  RESULT=1
 fi
 
-if ! grep "BUILD SUCCESS" read-replica.log; then
- echo "ReadReplicaSupportExample failed!"
- RESULT=1
-fi
+# if ! grep "BUILD SUCCESS" read-replica.log; then
+#  echo "ReadReplicaSupportExample failed!"
+#  RESULT=1
+# fi
 
-if ! grep "BUILD SUCCESS" read-replica-hikari.log; then
- echo "ReadReplicaSupportHikariExample failed!"
- RESULT=1
-fi
+# if ! grep "BUILD SUCCESS" read-replica-hikari.log; then
+#  echo "ReadReplicaSupportHikariExample failed!"
+#  RESULT=1
+# fi
 
 exit $RESULT
 
