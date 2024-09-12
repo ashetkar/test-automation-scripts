@@ -54,9 +54,9 @@ node yb-fallback-test-2.js 2>&1 | tee $ARTIFACTS_PATH/yb-fallback-test-2.txt
 
 echo "Test 4 (yb-fallback-test-2) completed"
 
-node yb-fallback-test-2.js 2>&1 | tee $ARTIFACTS_PATH/yb-fallback-test-3.txt
+node yb-fallback-test-3.js 2>&1 | tee $ARTIFACTS_PATH/yb-fallback-test-3.txt
 
-echo "Test 5 (yb-fallback-test-2) completed"
+echo "Test 5 (yb-fallback-test-3) completed"
 
 node yb-fallback-topology-aware-1 2>&1 | tee $ARTIFACTS_PATH/yb-fallback-topology-aware-1.txt
 
