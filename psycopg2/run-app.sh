@@ -5,12 +5,13 @@ DIR="driver-examples"
 if [ -d "$DIR" ]; then
  echo "driver-examples repository is already present"
  cd driver-examples
- git checkout main
+ git checkout conn-mgr-driver-examples
  git pull
 else
  echo "Cloning the driver examples repository"
  git clone git@github.com:yugabyte/driver-examples.git
  cd driver-examples
+ git checkout conn-mgr-driver-examples
 fi
 
 cd python-psycopg2/
