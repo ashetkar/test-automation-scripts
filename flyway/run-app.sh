@@ -10,7 +10,7 @@ else
 fi
 
 cd $DIR
-git checkout restructure-dir # todo change to main
+git checkout main
 git pull
 
 echo "Building and running the tests..."
