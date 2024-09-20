@@ -12,16 +12,14 @@ cd $CURRENT_DIR_PATH
 YBDB_IMAGE_PATH=$YBDB_IMAGE_PATH bash ./do-start.sh
 SUCCESS="$?"
 
-# Tear down the setup
-printf "Executing tear-down.sh ...\n"
-. ./tear-down.sh
-
 echo "Returning $SUCCESS"
 summary="FAIL"
 if [[ "$SUCCESS" == "0" ]]; then
   summary="PASS"
 fi
-printf '|%+24s |%+24s |\n' "YSQL JDBC" $summary >> $HOME/jenkins/summary
+
+# touch $HOME/jenkins/summary
+# printf '|%+24s |%+24s |\n' "YSQL JDBC" $summary >> $HOME/jenkins/summary
 printf '%s\n' "------------- END YSQL JDBC test run ------------------"
 
 exit $SUCCESS
