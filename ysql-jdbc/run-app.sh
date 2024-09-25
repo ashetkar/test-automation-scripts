@@ -26,10 +26,10 @@ YBDB_PATH=$YUGABYTE_HOME_DIRECTORY mvn exec:java -Dexec.mainClass=com.yugabyte.y
 echo "Running TopologyAwareLBFallback2Example ..."
 YBDB_PATH=$YUGABYTE_HOME_DIRECTORY mvn exec:java -Dexec.mainClass=com.yugabyte.ysql.TopologyAwareLBFallback2Example 2>&1 | tee jdbc-fallback2.log
 
-# echo "Running ReadReplicaSupportExample..."
+echo "Running ReadReplicaSupportExample..."
 YBDB_PATH=$YUGABYTE_HOME_DIRECTORY mvn exec:java -Dexec.mainClass=com.yugabyte.ysql.ReadReplicaSupportExample 2>&1 | tee read-replica.log
 
-# echo "Running ReadReplicaSupportHikariExample..."
+echo "Running ReadReplicaSupportHikariExample..."
 YBDB_PATH=$YUGABYTE_HOME_DIRECTORY mvn exec:java -Dexec.mainClass=com.yugabyte.ysql.ReadReplicaSupportHikariExample 2>&1 | tee read-replica-hikari.log
 
 RESULT=0
