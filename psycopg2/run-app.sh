@@ -73,6 +73,8 @@ mv temp_report.json "$REPORT_FILE"
 # Display the JSON report
 cat "$REPORT_FILE"
 
+readlink -f "$REPORT_FILE"
+
 # Deactivate the virtual environment
 deactivate
 
