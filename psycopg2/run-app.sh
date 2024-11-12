@@ -1,12 +1,26 @@
 #!/bin/bash
 set -e
 
-# Initialize variables
 DIR="driver-examples"
-REPORT_FILE="test_report_psycopg2.json"
-TESTS=("test_uniformloadbalancer.py" "test_topologyawareloadbalancer.py" "test_misc.py")
-REPORT=()
-OVERALL_STATUS=0  # This will be set to 1 if any test fails
+REPORT_FILE="$WORKSPACE/artifacts/test_report_psycopg2.json"
+OVERALL_STATUS=0
+
+# Function to run individual test cases and capture their results
+run_test() {
+    local test_name=$1
+    local script_name=$2
+    echo "Running $test_name from $script_name.py..."
+    
+    # Run the specific test case and capture errors
+    python3 -m unittest "${script_name}.${test_name}"
+    local exit_status=$?
+    if [ $exit_status -eq 0 ]; then
+        echo "{ \"test_name\": \"$test_name\", \"script_name\": \"$script_name.py\", \"result\": \"PASSED\", \"error_stack\": \"\" }," >> temp_report.json
+    else
+        echo "{ \"test_name\": \"$test_name\", \"script_name\": \"$script_name.py\", \"result\": \"FAILED\", \"error_stack\": \"$(tail -n 10 unittest_error.log)\" }," >> temp_report.json
+        OVERALL_STATUS=1
+    fi
+}
 
 # Clone or update the repository
 if [ -d "$DIR" ]; then
@@ -20,40 +34,47 @@ else
     cd driver-examples
 fi
 
-# Setup Python virtual environment
 cd python-psycopg2/
+
+# Setup Python virtual environment
 python3 -m venv $WORKSPACE/environments/psycopg2-test
 source $WORKSPACE/environments/psycopg2-test/bin/activate
 pip install psycopg2-yugabytedb
 
 export YB_PATH=$YUGABYTE_HOME_DIRECTORY
 
-# Run tests and collect results
-for TEST_SCRIPT in "${TESTS[@]}"; do
-    TEST_NAME="${TEST_SCRIPT%.*}"  # Extracts 'test_uniformloadbalancer' from 'test_uniformloadbalancer.py'
-    python3 "$TEST_SCRIPT"
-    EXIT_STATUS=$?
+# Initialize the JSON report
+echo "[" > temp_report.json
 
-    if [ $EXIT_STATUS -eq 0 ]; then
-        RESULT="PASSED"
-    else
-        RESULT="FAILED"
-        OVERALL_STATUS=1  # Mark overall status as failed if any test fails
-    fi
+# Run all the individual tests you want
+run_test "TestUniformLoadBalancer.test_2" "test_uniformloadbalancer" 2> unittest_error.log
+run_test "TestUniformLoadBalancer.test_3" "test_uniformloadbalancer" 2> unittest_error.log
+run_test "TestUniformLoadBalancer.test_4" "test_uniformloadbalancer" 2> unittest_error.log
+run_test "TestUniformLoadBalancer.test_5" "test_uniformloadbalancer" 2> unittest_error.log
+run_test "TestUniformLoadBalancer.test_6" "test_uniformloadbalancer" 2> unittest_error.log
+run_test "TestUniformLoadBalancer.test_7" "test_uniformloadbalancer" 2> unittest_error.log
 
-    # Append test result to JSON array
-    REPORT+=("{\"test_name\": \"$TEST_NAME\", \"script_name\": \"$TEST_SCRIPT\", \"result\": \"$RESULT\"}")
-done
+run_test "TestTopologyAwareLoadBalancer.test_2" "test_topologyawareloadbalancer" 2> unittest_error.log
+run_test "TestTopologyAwareLoadBalancer.test_3" "test_topologyawareloadbalancer" 2> unittest_error.log
+run_test "TestTopologyAwareLoadBalancer.test_4" "test_topologyawareloadbalancer" 2> unittest_error.log
+run_test "TestTopologyAwareLoadBalancer.test_5" "test_topologyawareloadbalancer" 2> unittest_error.log
+run_test "TestTopologyAwareLoadBalancer.test_6" "test_topologyawareloadbalancer" 2> unittest_error.log
+run_test "TestTopologyAwareLoadBalancer.test_7" "test_topologyawareloadbalancer" 2> unittest_error.log
 
-deactivate
+run_test "TestMisc.test_2" "test_misc" 2> unittest_error.log
+run_test "TestMisc.test_3" "test_misc" 2> unittest_error.log
+# Finalize the JSON report
+sed -i '' '$ s/,$//' temp_report.json # Remove trailing comma from the last JSON object
+echo "]" >> temp_report.json
 
-# Generate final JSON report
-echo "[" > $WORKSPACE/artifacts/$REPORT_FILE
-(IFS=,; echo "${REPORT[*]}") >> $WORKSPACE/artifacts/$REPORT_FILE
-echo "]" >> $WORKSPACE/artifacts/$REPORT_FILE
+# Move the temporary report to the final report file
+mv temp_report.json "$REPORT_FILE"
 
 # Display the JSON report
-cat $REPORT_FILE
+cat "$REPORT_FILE"
 
-# Exit with overall status
+# Deactivate the virtual environment
+deactivate
+
+# Exit with the overall status
 exit $OVERALL_STATUS
