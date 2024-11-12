@@ -64,7 +64,7 @@ run_test "TestTopologyAwareLoadBalancer.test_7" "test_topologyawareloadbalancer"
 run_test "TestMisc.test_2" "test_misc" 2> unittest_error.log
 run_test "TestMisc.test_3" "test_misc" 2> unittest_error.log
 # Finalize the JSON report
-sed -i '' '$ s/,$//' temp_report.json # Remove trailing comma from the last JSON object
+sed -i '$ s/,$//' temp_report.json # Remove trailing comma from the last JSON object
 echo "]" >> temp_report.json
 
 # Move the temporary report to the final report file
