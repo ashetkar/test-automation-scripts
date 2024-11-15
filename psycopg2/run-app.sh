@@ -17,7 +17,8 @@ run_test() {
     if [ $exit_status -eq 0 ]; then
         echo "{ \"test_name\": \"$test_name\", \"script_name\": \"$script_name.py\", \"result\": \"PASSED\", \"error_stack\": \"\" }," >> temp_report.json
     else
-        echo "{ \"test_name\": \"$test_name\", \"script_name\": \"$script_name.py\", \"result\": \"FAILED\", \"error_stack\": \"$(tail -n 10 unittest_error.log)\" }," >> temp_report.json
+        tail -n 10 unittest_error.log | awk '{printf "%s\\n", $0}' > stack4json.log
+        echo "{ \"test_name\": \"$test_name\", \"script_name\": \"$script_name.py\", \"result\": \"FAILED\", \"error_stack\": \"$(cat stack4json.log)\" }," >> temp_report.json
         OVERALL_STATUS=1
     fi
 }
