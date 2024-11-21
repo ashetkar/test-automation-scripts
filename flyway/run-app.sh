@@ -2,7 +2,7 @@
 set -e
 
 DIR="flyway-tests"
-REPORT_FILE="$WORKSPACE/artifacts/test_report_jdbc_ysql.json"
+REPORT_FILE="$WORKSPACE/artifacts/test_report_flyway_plugin.json"
 
 if [ -d "$DIR" ]; then
  echo "$DIR repository is already present"
