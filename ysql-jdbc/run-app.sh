@@ -28,7 +28,8 @@ run_test() {
     echo "Running $test_name from $script_name..."
 
     # Run the specific test case and capture errors
-    YBDB_PATH=$YUGABYTE_HOME_DIRECTORY mvn exec:java -Dexec.mainClass=com.yugabyte.ysql.${test_name}  2>&1 | tee ${test_name}.log
+    local tname=${test_name%.main}
+    YBDB_PATH=$YUGABYTE_HOME_DIRECTORY mvn exec:java -Dexec.mainClass=com.yugabyte.ysql.${tname}  2>&1 | tee ${test_name}.log
     if ! grep "BUILD SUCCESS" ${test_name}.log; then
       # Get the lines between '[WARNING]' and 'BUILD FAILURE' which is the stack trace and replace new lines with '\n'
       sed -n '/\[WARNING\]/,/BUILD FAILURE/{/\[WARNING\]/b;/BUILD FAILURE/b;p}' ${test_name}.log | awk '{printf "%s\\n", $0}' > stack4json.log

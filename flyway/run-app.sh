@@ -26,7 +26,7 @@ run_test() {
     local script_name=$2
 
     # Run the specific test case and capture errors
-    local tname="com.yugabyte.${script_name}#${test_name}"
+    local tname="com.yugabyte.${test_name/./#}"
     echo "Running ${tname}..."
     mvn test -Dtest=${tname} 2>&1 | tee ${test_name}.log
     if ! grep "BUILD SUCCESS" ${test_name}.log; then
