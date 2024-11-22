@@ -15,7 +15,7 @@ run_test() {
     python3 -m unittest "${script_name}.${test_name}"
     local exit_status=$?
     if [ $exit_status -eq 0 ]; then
-        echo "{ \"test_name\": \"$test_name\", \"script_name\": \"$script_name.py\", \"result\": \"PASSED\", \"error_stack\": \"\" }," >> temp_report.json
+        echo "{ \"test_name\": \"$test_name\", \"script_name\": \"psycopg2/$script_name.py\", \"result\": \"PASSED\", \"error_stack\": \"\" }," >> temp_report.json
     else
         tail -n 10 unittest_error.log | awk '{printf "%s\\n", $0}' > stack4json.log
         echo "{ \"test_name\": \"$test_name\", \"script_name\": \"$script_name.py\", \"result\": \"FAILED\", \"error_stack\": \"$(cat stack4json.log)\" }," >> temp_report.json
@@ -48,19 +48,19 @@ export YB_PATH=$YUGABYTE_HOME_DIRECTORY
 echo "[" > temp_report.json
 
 # Run all the individual tests you want
-run_test "TestUniformLoadBalancer.test_2" "psycopg2/test_uniformloadbalancer" 2> unittest_error.log
-run_test "TestUniformLoadBalancer.test_3" "psycopg2/test_uniformloadbalancer" 2> unittest_error.log
-run_test "TestUniformLoadBalancer.test_4" "psycopg2/test_uniformloadbalancer" 2> unittest_error.log
-run_test "TestUniformLoadBalancer.test_5" "psycopg2/test_uniformloadbalancer" 2> unittest_error.log
-run_test "TestUniformLoadBalancer.test_6" "psycopg2/test_uniformloadbalancer" 2> unittest_error.log
-run_test "TestUniformLoadBalancer.test_7" "psycopg2/test_uniformloadbalancer" 2> unittest_error.log
+run_test "TestUniformLoadBalancer.test_2" "test_uniformloadbalancer" 2> unittest_error.log
+run_test "TestUniformLoadBalancer.test_3" "test_uniformloadbalancer" 2> unittest_error.log
+run_test "TestUniformLoadBalancer.test_4" "test_uniformloadbalancer" 2> unittest_error.log
+run_test "TestUniformLoadBalancer.test_5" "test_uniformloadbalancer" 2> unittest_error.log
+run_test "TestUniformLoadBalancer.test_6" "test_uniformloadbalancer" 2> unittest_error.log
+run_test "TestUniformLoadBalancer.test_7" "test_uniformloadbalancer" 2> unittest_error.log
 
-run_test "TestTopologyAwareLoadBalancer.test_2" "psycopg2/test_topologyawareloadbalancer" 2> unittest_error.log
-run_test "TestTopologyAwareLoadBalancer.test_3" "psycopg2/test_topologyawareloadbalancer" 2> unittest_error.log
-run_test "TestTopologyAwareLoadBalancer.test_4" "psycopg2/test_topologyawareloadbalancer" 2> unittest_error.log
-run_test "TestTopologyAwareLoadBalancer.test_5" "psycopg2/test_topologyawareloadbalancer" 2> unittest_error.log
-run_test "TestTopologyAwareLoadBalancer.test_6" "psycopg2/test_topologyawareloadbalancer" 2> unittest_error.log
-run_test "TestTopologyAwareLoadBalancer.test_7" "psycopg2/test_topologyawareloadbalancer" 2> unittest_error.log
+run_test "TestTopologyAwareLoadBalancer.test_2" "test_topologyawareloadbalancer" 2> unittest_error.log
+run_test "TestTopologyAwareLoadBalancer.test_3" "test_topologyawareloadbalancer" 2> unittest_error.log
+run_test "TestTopologyAwareLoadBalancer.test_4" "test_topologyawareloadbalancer" 2> unittest_error.log
+run_test "TestTopologyAwareLoadBalancer.test_5" "test_topologyawareloadbalancer" 2> unittest_error.log
+run_test "TestTopologyAwareLoadBalancer.test_6" "test_topologyawareloadbalancer" 2> unittest_error.log
+run_test "TestTopologyAwareLoadBalancer.test_7" "test_topologyawareloadbalancer" 2> unittest_error.log
 
 run_test "TestMisc.test_2" "test_misc" 2> unittest_error.log
 run_test "TestMisc.test_3" "test_misc" 2> unittest_error.log
