@@ -48,19 +48,19 @@ export YB_PATH=$YUGABYTE_HOME_DIRECTORY
 echo "[" > temp_report.json
 
 # Run all the individual tests you want
-run_test "TestUniformLoadBalancer.test_2" "test_uniformloadbalancer" 2> unittest_error.log
-run_test "TestUniformLoadBalancer.test_3" "test_uniformloadbalancer" 2> unittest_error.log
-run_test "TestUniformLoadBalancer.test_4" "test_uniformloadbalancer" 2> unittest_error.log
-run_test "TestUniformLoadBalancer.test_5" "test_uniformloadbalancer" 2> unittest_error.log
-run_test "TestUniformLoadBalancer.test_6" "test_uniformloadbalancer" 2> unittest_error.log
-run_test "TestUniformLoadBalancer.test_7" "test_uniformloadbalancer" 2> unittest_error.log
+run_test "TestUniformLoadBalancer.test_2" "psycopg2/test_uniformloadbalancer" 2> unittest_error.log
+run_test "TestUniformLoadBalancer.test_3" "psycopg2/test_uniformloadbalancer" 2> unittest_error.log
+run_test "TestUniformLoadBalancer.test_4" "psycopg2/test_uniformloadbalancer" 2> unittest_error.log
+run_test "TestUniformLoadBalancer.test_5" "psycopg2/test_uniformloadbalancer" 2> unittest_error.log
+run_test "TestUniformLoadBalancer.test_6" "psycopg2/test_uniformloadbalancer" 2> unittest_error.log
+run_test "TestUniformLoadBalancer.test_7" "psycopg2/test_uniformloadbalancer" 2> unittest_error.log
 
-run_test "TestTopologyAwareLoadBalancer.test_2" "test_topologyawareloadbalancer" 2> unittest_error.log
-run_test "TestTopologyAwareLoadBalancer.test_3" "test_topologyawareloadbalancer" 2> unittest_error.log
-run_test "TestTopologyAwareLoadBalancer.test_4" "test_topologyawareloadbalancer" 2> unittest_error.log
-run_test "TestTopologyAwareLoadBalancer.test_5" "test_topologyawareloadbalancer" 2> unittest_error.log
-run_test "TestTopologyAwareLoadBalancer.test_6" "test_topologyawareloadbalancer" 2> unittest_error.log
-run_test "TestTopologyAwareLoadBalancer.test_7" "test_topologyawareloadbalancer" 2> unittest_error.log
+run_test "TestTopologyAwareLoadBalancer.test_2" "psycopg2/test_topologyawareloadbalancer" 2> unittest_error.log
+run_test "TestTopologyAwareLoadBalancer.test_3" "psycopg2/test_topologyawareloadbalancer" 2> unittest_error.log
+run_test "TestTopologyAwareLoadBalancer.test_4" "psycopg2/test_topologyawareloadbalancer" 2> unittest_error.log
+run_test "TestTopologyAwareLoadBalancer.test_5" "psycopg2/test_topologyawareloadbalancer" 2> unittest_error.log
+run_test "TestTopologyAwareLoadBalancer.test_6" "psycopg2/test_topologyawareloadbalancer" 2> unittest_error.log
+run_test "TestTopologyAwareLoadBalancer.test_7" "psycopg2/test_topologyawareloadbalancer" 2> unittest_error.log
 
 run_test "TestMisc.test_2" "test_misc" 2> unittest_error.log
 run_test "TestMisc.test_3" "test_misc" 2> unittest_error.log

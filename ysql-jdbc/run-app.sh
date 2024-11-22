@@ -41,11 +41,11 @@ run_test() {
 
 echo "[" > temp_report.json
 
-run_test "LoadBalanceConcurrencyExample"   "JDBC Smart Driver"
-run_test "TopologyAwareLBFallbackExample"  "JDBC Smart Driver"
-run_test "TopologyAwareLBFallback2Example" "JDBC Smart Driver"
-run_test "ReadReplicaSupportExample"       "JDBC Smart Driver"
-run_test "ReadReplicaSupportHikariExample" "JDBC Smart Driver"
+run_test "LoadBalanceConcurrencyExample.main"   "ysql-jdbc/start.sh"
+run_test "TopologyAwareLBFallbackExample.main"  "ysql-jdbc/start.sh"
+run_test "TopologyAwareLBFallback2Example.main" "ysql-jdbc/start.sh"
+run_test "ReadReplicaSupportExample.main"       "ysql-jdbc/start.sh"
+run_test "ReadReplicaSupportHikariExample.main" "ysql-jdbc/start.sh"
 
 sed -i '$ s/,$//' temp_report.json # Remove trailing comma from the last JSON object
 echo "]" >> temp_report.json

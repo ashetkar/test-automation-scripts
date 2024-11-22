@@ -43,9 +43,9 @@ mvn clean compile --no-transfer-progress
 
 echo "[" > temp_report.json
 
-run_test "baselineTest" "TestBaseline"
-run_test "dlabsTest" "TestBaseline"
-run_test "advisoryLockTest" "TestYBLocking"
+run_test "TestBaseline.baselineTest"      "flyway/start.sh"
+run_test "TestBaseline.dlabsTest"         "flyway/start.sh"
+run_test "TestYBLocking.advisoryLockTest" "flyway/start.sh"
 
 sed -i '$ s/,$//' temp_report.json # Remove trailing comma from the last JSON object
 echo "]" >> temp_report.json
