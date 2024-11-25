@@ -62,8 +62,17 @@ run_test "TestTopologyAwareLoadBalancer.test_5" "test_topologyawareloadbalancer"
 run_test "TestTopologyAwareLoadBalancer.test_6" "test_topologyawareloadbalancer" 2> unittest_error.log
 run_test "TestTopologyAwareLoadBalancer.test_7" "test_topologyawareloadbalancer" 2> unittest_error.log
 
+run_test "TestMisc.test_1" "test_misc" 2> unittest_error.log
 run_test "TestMisc.test_2" "test_misc" 2> unittest_error.log
 run_test "TestMisc.test_3" "test_misc" 2> unittest_error.log
+
+run_test "TestFallbackTopology.test_1" "test_fallback_topology" 2> unittest_error.log
+run_test "TestFallbackTopology.test_2" "test_fallback_topology" 2> unittest_error.log
+run_test "TestFallbackTopology.test_3" "test_fallback_topology" 2> unittest_error.log
+
+run_test "TestRR1.test_1" "test_rr1" 2> unittest_error.log
+
+run_test "TestRR2.test_1" "test_rr2" 2> unittest_error.log
 # Finalize the JSON report
 sed -i '$ s/,$//' temp_report.json # Remove trailing comma from the last JSON object
 echo "]" >> temp_report.json
