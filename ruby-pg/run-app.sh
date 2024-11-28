@@ -18,8 +18,15 @@ cd ruby/ysql
 
 export YBDB_PATH=$YUGABYTE_HOME_DIRECTORY
 
-echo "Installing the gem..."
+echo "which gem? "
+which gem
+
+echo "PATH: $PATH"
+echo "GEM_HOME: $GEM_HOME"
+echo "Installing the ysql gems..."
 gem install yugabytedb-ysql -- --with-pg-config=$YBDB_PATH/postgres/bin/pg_config
+echo "Installing the concurrent gems..."
+gem install concurrent-ruby
 
 # Function to run individual test cases and capture their results
 run_test() {
