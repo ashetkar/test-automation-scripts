@@ -20,9 +20,16 @@ export YBDB_PATH=$YUGABYTE_HOME_DIRECTORY
 
 echo "which gem? "
 which gem
-
+echo "ruby -e Gem.user_dir"
+ruby -e 'puts Gem.user_dir'
+echo "ruby and gem version"
+ruby -v
+gem -v
+echo "listing /var/lib/jenkins/bin"
+ls -l /var/lib/jenkins/bin
 echo "PATH: $PATH"
 echo "GEM_HOME: $GEM_HOME"
+export PATH=$PATH:/var/lib/jenkins/bin
 echo "Installing the ysql gems..."
 gem install yugabytedb-ysql -- --with-pg-config=$YBDB_PATH/postgres/bin/pg_config
 echo "Installing the concurrent gems..."
