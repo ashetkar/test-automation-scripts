@@ -30,10 +30,12 @@ ls -l /var/lib/jenkins/bin
 echo "PATH: $PATH"
 echo "GEM_HOME: $GEM_HOME"
 export PATH=$PATH:/var/lib/jenkins/bin
-echo "Installing the ysql gems..."
+echo "Installing the ysql gem..."
 gem install yugabytedb-ysql -- --with-pg-config=$YBDB_PATH/postgres/bin/pg_config
-echo "Installing the concurrent gems..."
+echo "Installing the concurrent gem..."
 gem install concurrent-ruby
+echo "Installing the pg gem..."
+gem install pg -- --with-pg-config=$YBDB_PATH/postgres/bin/pg_config
 
 # Function to run individual test cases and capture their results
 run_test() {
