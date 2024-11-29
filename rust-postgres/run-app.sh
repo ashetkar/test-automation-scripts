@@ -64,6 +64,7 @@ run_test "talb_multithread" "rust-postgres/start.sh"
 # Finalize the JSON report
 sed -i '$ s/,$//' temp_report.json # Remove trailing comma from the last JSON object
 echo "]" >> temp_report.json
+sed -i 's/\t/    /g' temp_report.json # Replace tabs with spaces
 
 # Move the temporary report to the final report file
 mv temp_report.json "$REPORT_FILE"
