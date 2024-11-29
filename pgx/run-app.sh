@@ -2,6 +2,37 @@
 set -e
 
 DIR="driver-examples"
+REPORT_FILE="$WORKSPACE/artifacts/test_report_pgx.json"
+OVERALL_STATUS=0
+
+# Function to run individual test cases and capture their results
+run_test() {
+    local test_name=$1
+    local test_num=$2
+    local message=$3
+    local script_name=$4
+    echo "Running $test_name from $script_name..."
+
+    # Run the specific test case and capture errors
+    if [ $test_num -eq 4 ]; then
+        test_name="load_balance"
+        ./ybsql_load_balance $YUGABYTE_HOME_DIRECTORY 2>&1 | tee ${test_name}.log
+    elif [ $test_num -eq 0 ]; then
+        ./ybsql_load_balance $YUGABYTE_HOME_DIRECTORY --pool 2>&1 | tee ${test_name}.log
+    else
+        ./ybsql_load_balance $YUGABYTE_HOME_DIRECTORY "--$test_name" "$test_num" 2>&1 | tee ${test_name}.log
+    fi
+    if ! grep "$message" ${test_name}.log; then
+      tail -n 30 ${test_name}.log | awk '{printf "%s\\n", $0}' > stack4json.log
+      echo "{ \"test_name\": \"$test_name\", \"script_name\": \"$script_name.py\", \"result\": \"FAILED\", \"error_stack\": \"$(cat stack4json.log)\" }," >> temp_report.json
+      OVERALL_STATUS=1
+    else
+      echo "Example $test_name completed"
+      echo "{ \"test_name\": \"$test_name\", \"script_name\": \"$script_name\", \"result\": \"PASSED\", \"error_stack\": \"\" }," >> temp_report.json
+    fi
+}
+
+# Clone or update the repository
 if [ -d "$DIR" ]; then
  echo "driver-examples repository is already present"
  cd driver-examples
@@ -25,22 +56,31 @@ go build ybsql_load_balance.go ybsql_load_balance_pool.go ybsql_fallback.go perf
 
 echo "Running tests"
 
-./ybsql_load_balance $YUGABYTE_HOME_DIRECTORY 2>&1 | tee $ARTIFACTS_PATH/pgx_connect.txt
+# Initialize the JSON report
+echo "[" > temp_report.json
 
-./ybsql_load_balance $YUGABYTE_HOME_DIRECTORY --pool 2>&1 | tee $ARTIFACTS_PATH/pgxpool_connect.txt
+run_test " " "4" "Closing the application ..." "pgx/start.sh"
 
-./ybsql_load_balance $YUGABYTE_HOME_DIRECTORY --fallbackTest 1 2>&1 | tee $ARTIFACTS_PATH/pgx_fallback1.txt
+run_test "pool" "0" "Closing the application ..." "pgx/start.sh"
 
-./ybsql_load_balance $YUGABYTE_HOME_DIRECTORY --fallbackTest 2 2>&1 | tee $ARTIFACTS_PATH/pgx_fallback2.txt
+run_test "fallbackTest" "1" "End of checkNodeDownBehaviorMultiFallback() ..." "pgx/start.sh"
 
-./ybsql_load_balance $YUGABYTE_HOME_DIRECTORY --fallbackTest 3 2>&1 | tee $ARTIFACTS_PATH/pgx_fallback3.txt
+run_test "fallbackTest" "2" "End of checkMultiNodeDown() ..." "pgx/start.sh"
 
-grep "Closing the application ..." $ARTIFACTS_PATH/pgx_connect.txt
+run_test "fallbackTest" "3" "End of checkNodeDownPrimary() ..." "pgx/start.sh"
 
-grep "Closing the application ..." $ARTIFACTS_PATH/pgxpool_connect.txt
+# Finalize the JSON report
+sed -i '$ s/,$//' temp_report.json # Remove trailing comma from the last JSON object
+echo "]" >> temp_report.json
 
-grep "End of checkNodeDownBehaviorMultiFallback() ..." $ARTIFACTS_PATH/pgx_fallback1.txt
+# Move the temporary report to the final report file
+mv temp_report.json "$REPORT_FILE"
 
-grep "End of checkMultiNodeDown() ..." $ARTIFACTS_PATH/pgx_fallback2.txt
+# Display the JSON report
+echo "TEST REPORT -------------------------"
+cat "$REPORT_FILE"
 
-grep "End of checkNodeDownPrimary() ..." $ARTIFACTS_PATH/pgx_fallback3.txt
+readlink -f "$REPORT_FILE"
+
+# Exit with the overall status
+exit $OVERALL_STATUS
