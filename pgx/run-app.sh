@@ -11,19 +11,22 @@ run_test() {
     local test_num=$2
     local message=$3
     local script_name=$4
-    echo "Running $test_name from $script_name..."
 
     # Run the specific test case and capture errors
-    if [ $test_num -eq 4 ]; then
+    if [ $test_num -eq -1 ]; then
         test_name="load_balance"
-        ./ybsql_load_balance $YUGABYTE_HOME_DIRECTORY 2>&1 | tee ${test_name}.log
+        test_num=0
+        echo "Running ybsql_load_balance from $script_name..."
+        ./ybsql_load_balance $YUGABYTE_HOME_DIRECTORY 2>&1 | tee ${test_name}_${test_num}.log
     elif [ $test_num -eq 0 ]; then
-        ./ybsql_load_balance $YUGABYTE_HOME_DIRECTORY --pool 2>&1 | tee ${test_name}.log
+        echo "Running pool example from $script_name..."
+        ./ybsql_load_balance $YUGABYTE_HOME_DIRECTORY --pool 2>&1 | tee ${test_name}_${test_num}.log
     else
-        ./ybsql_load_balance $YUGABYTE_HOME_DIRECTORY "--$test_name" "$test_num" 2>&1 | tee ${test_name}.log
+        echo "Running $test_name from $script_name..."
+        ./ybsql_load_balance $YUGABYTE_HOME_DIRECTORY "--$test_name" "$test_num" 2>&1 | tee ${test_name}_${test_num}.log
     fi
-    if ! grep "$message" ${test_name}.log; then
-      tail -n 30 ${test_name}.log | awk '{printf "%s\\n", $0}' > stack4json.log
+    if ! grep "$message" ${test_name}_${test_num}.log; then
+      tail -n 30 ${test_name}_${test_num}.log | awk '{printf "%s\\n", $0}' > stack4json.log
       echo "{ \"test_name\": \"$test_name\", \"script_name\": \"$script_name.py\", \"result\": \"FAILED\", \"error_stack\": \"$(cat stack4json.log)\" }," >> temp_report.json
       OVERALL_STATUS=1
     else
@@ -59,7 +62,7 @@ echo "Running tests"
 # Initialize the JSON report
 echo "[" > temp_report.json
 
-run_test " " "4" "Closing the application ..." "pgx/start.sh"
+run_test " " "-1" "Closing the application ..." "pgx/start.sh"
 
 run_test "pool" "0" "Closing the application ..." "pgx/start.sh"
 
@@ -68,6 +71,10 @@ run_test "fallbackTest" "1" "End of checkNodeDownBehaviorMultiFallback() ..." "p
 run_test "fallbackTest" "2" "End of checkMultiNodeDown() ..." "pgx/start.sh"
 
 run_test "fallbackTest" "3" "End of checkNodeDownPrimary() ..." "pgx/start.sh"
+
+run_test "rr" "1" "Closing the application ..." "pgx/start.sh"
+
+run_test "rr" "2" "Closing the application ..." "pgx/start.sh"
 
 # Finalize the JSON report
 sed -i '$ s/,$//' temp_report.json # Remove trailing comma from the last JSON object
