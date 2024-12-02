@@ -43,6 +43,7 @@ run_test() {
     if grep "Error" "${script_name}-${test_case}.log"; then
       # Get the lines after 'Error' which is the stack trace and replace new lines with '\n'
       sed -n '/Error/,$p' "${script_name}-${test_case}.log" | awk '{printf "%s\\n", $0}' > stack4json.log
+      echo '[ { "test_name": "test_with_multiple_placement_info", "script_name": "cluster_aware_lb_test.rb", "result": "FAILED", "error_stack": "tablet_id: "fed6a43a21b2425ca418eaa15a09d59e" state { transaction_id: "\252\271\3453c\251NG\231\274\247\227\037\010\212\346" status: COMMITTED tablets: "5b60199be9224ac58defd03d3bc7193a" } " } ]' > stack4json.log
       sed -i 's/\\\([^"'\'']\)/\\\\\1/g' stack4json.log  # Insert \ before another \ which is not followed by either " or '
       sed -i 's/\"/\\\\\"/g' stack4json.log  # Replace " with \"
       echo "{ \"test_name\": \"$test_case\", \"script_name\": \"$script_name\", \"result\": \"FAILED\", \"error_stack\": \"$(cat stack4json.log)\" }," >> temp_report.json
