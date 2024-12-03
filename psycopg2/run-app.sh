@@ -17,8 +17,8 @@ run_test() {
     if [ $exit_status -eq 0 ]; then
         python $WORKSPACE/utils/create_json.py --test_name $test_name --script_name psycopg2/$script_name.py --result PASSED >> temp_report.json 
     else
-        tail -n 10 unittest_error.log | awk '{printf "%s\\n", $0}' > stack4json.log
-        python $WORKSPACE/utils/create_json.py --test_name $test_name --script_name psycopg2/$script_name.py --result PASSED --file_path stack4json.log >> temp_report.json  
+        sed -n '/Traceback/,$p' unittest_error.log > stack4json.log
+        python $WORKSPACE/utils/create_json.py --test_name $test_name --script_name psycopg2/$script_name.py --result FAILED --file_path stack4json.log >> temp_report.json  
         OVERALL_STATUS=1
     fi
 }
@@ -74,7 +74,7 @@ run_test "TestClusterAwareRR.test_cluster_aware_rr_all_cases" "test_cluster_awar
 
 run_test "TestTopologyAwareRR.test_topology_aware_rr_all_cases" "test_topology_aware_rr" 2> unittest_error.log
 # Finalize the JSON report
-sed -i '$ s/,$//' temp_report.json # Remove trailing comma from the last JSON object
+sed -i '' '$ s/,$//' temp_report.json # Remove trailing comma from the last JSON object
 echo "]" >> temp_report.json
 
 # Move the temporary report to the final report file
