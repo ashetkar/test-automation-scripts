@@ -32,10 +32,10 @@ run_test() {
     if ! grep "BUILD SUCCESS" ${test_name}.log; then
       # Get the lines between 'FAILURE!' and 'BUILD FAILURE' which is the stack trace and replace new lines with '\n'
       sed -n '/FAILURE!/,/BUILD FAILURE/{/FAILURE!/b;/BUILD FAILURE/b;p}' ${test_name}.log > stack4json.log
-      python $WORKSPACE/utils/create_json.py --test_name $test_name --script_name $script_name --result FAILED --file_path stack4json.log >> temp_report.json  
+      python $WORKSPACE/integrations/utils/create_json.py --test_name $test_name --script_name $script_name --result FAILED --file_path stack4json.log >> temp_report.json  
       RESULT=1
     else
-      python $WORKSPACE/utils/create_json.py --test_name $test_name --script_name $script_name --result PASSED >> temp_report.json  
+      python $WORKSPACE/integrations/utils/create_json.py --test_name $test_name --script_name $script_name --result PASSED >> temp_report.json  
     fi
 }
 

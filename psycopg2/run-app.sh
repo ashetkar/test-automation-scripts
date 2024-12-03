@@ -15,10 +15,10 @@ run_test() {
     python3 -m unittest "${script_name}.${test_name}"
     local exit_status=$?
     if [ $exit_status -eq 0 ]; then
-        python $WORKSPACE/utils/create_json.py --test_name $test_name --script_name psycopg2/$script_name.py --result PASSED >> temp_report.json 
+        python $WORKSPACE/integrations/utils/create_json.py --test_name $test_name --script_name psycopg2/$script_name.py --result PASSED >> temp_report.json 
     else
         sed -n '/Traceback/,$p' unittest_error.log > stack4json.log
-        python $WORKSPACE/utils/create_json.py --test_name $test_name --script_name psycopg2/$script_name.py --result FAILED --file_path stack4json.log >> temp_report.json  
+        python $WORKSPACE/integrations/utils/create_json.py --test_name $test_name --script_name psycopg2/$script_name.py --result FAILED --file_path stack4json.log >> temp_report.json  
         OVERALL_STATUS=1
     fi
 }
