@@ -50,31 +50,31 @@ export YB_PATH=$YUGABYTE_HOME_DIRECTORY
 echo "[" > temp_report.json
 
 # Run all the individual tests you want
-run_test "TestUniformLoadBalancer.test_2" "test_uniformloadbalancer" 2> unittest_error.log
-run_test "TestUniformLoadBalancer.test_3" "test_uniformloadbalancer" 2> unittest_error.log
-run_test "TestUniformLoadBalancer.test_4" "test_uniformloadbalancer" 2> unittest_error.log
-run_test "TestUniformLoadBalancer.test_5" "test_uniformloadbalancer" 2> unittest_error.log
-run_test "TestUniformLoadBalancer.test_6" "test_uniformloadbalancer" 2> unittest_error.log
-run_test "TestUniformLoadBalancer.test_7" "test_uniformloadbalancer" 2> unittest_error.log
+run_test "TestUniformLoadBalancer.test_lb_true" "test_uniformloadbalancer" 2> unittest_error.log
+run_test "TestUniformLoadBalancer.test_lb_true_multithreaded" "test_uniformloadbalancer" 2> unittest_error.log
+run_test "TestUniformLoadBalancer.test_lb_true_node_down" "test_uniformloadbalancer" 2> unittest_error.log
+run_test "TestUniformLoadBalancer.test_lb_true_new_node" "test_uniformloadbalancer" 2> unittest_error.log
+run_test "TestUniformLoadBalancer.test_lb_true_localhost" "test_uniformloadbalancer" 2> unittest_error.log
+run_test "TestUniformLoadBalancer.test_lb_true_pool" "test_uniformloadbalancer" 2> unittest_error.log
 
-run_test "TestTopologyAwareLoadBalancer.test_2" "test_topologyawareloadbalancer" 2> unittest_error.log
-run_test "TestTopologyAwareLoadBalancer.test_3" "test_topologyawareloadbalancer" 2> unittest_error.log
-run_test "TestTopologyAwareLoadBalancer.test_4" "test_topologyawareloadbalancer" 2> unittest_error.log
-run_test "TestTopologyAwareLoadBalancer.test_5" "test_topologyawareloadbalancer" 2> unittest_error.log
-run_test "TestTopologyAwareLoadBalancer.test_6" "test_topologyawareloadbalancer" 2> unittest_error.log
-run_test "TestTopologyAwareLoadBalancer.test_7" "test_topologyawareloadbalancer" 2> unittest_error.log
+run_test "TestTopologyAwareLoadBalancer.test_topology_aware" "test_topologyawareloadbalancer" 2> unittest_error.log
+run_test "TestTopologyAwareLoadBalancer.test_topology_aware_multithreaded" "test_topologyawareloadbalancer" 2> unittest_error.log
+run_test "TestTopologyAwareLoadBalancer.test_topology_aware_node_down" "test_topologyawareloadbalancer" 2> unittest_error.log
+run_test "TestTopologyAwareLoadBalancer.test_topology_aware_add_node" "test_topologyawareloadbalancer" 2> unittest_error.log
+run_test "TestTopologyAwareLoadBalancer.test_topology_aware_localhost" "test_topologyawareloadbalancer" 2> unittest_error.log
+run_test "TestTopologyAwareLoadBalancer.test_topology_aware_pool" "test_topologyawareloadbalancer" 2> unittest_error.log
 
-run_test "TestMisc.test_1" "test_misc" 2> unittest_error.log
-run_test "TestMisc.test_2" "test_misc" 2> unittest_error.log
-run_test "TestMisc.test_3" "test_misc" 2> unittest_error.log
+run_test "TestMisc.test_default_port_with_cluster_on_different_port" "test_misc" 2> unittest_error.log
+run_test "TestMisc.test_default_port" "test_misc" 2> unittest_error.log
+run_test "TestMisc.test_all_valid_uris" "test_misc" 2> unittest_error.log
 
-run_test "TestFallbackTopology.test_1" "test_fallback_topology" 2> unittest_error.log
-run_test "TestFallbackTopology.test_2" "test_fallback_topology" 2> unittest_error.log
-run_test "TestFallbackTopology.test_3" "test_fallback_topology" 2> unittest_error.log
+run_test "TestFallbackTopology.test_all_valid_placement_zones" "test_fallback_topology" 2> unittest_error.log
+run_test "TestFallbackTopology.test_fallback" "test_fallback_topology" 2> unittest_error.log
+run_test "TestFallbackTopology.test_multilevel_fallback_with_node_up" "test_fallback_topology" 2> unittest_error.log
 
-run_test "TestClusterAwareRR.test_1" "test_cluster_aware_rr" 2> unittest_error.log
+run_test "TestClusterAwareRR.test_cluster_aware_rr_all_cases" "test_cluster_aware_rr" 2> unittest_error.log
 
-run_test "TestTopologyAwareRR.test_1" "test_topology_aware_rr" 2> unittest_error.log
+run_test "TestTopologyAwareRR.test_topology_aware_rr_all_cases" "test_topology_aware_rr" 2> unittest_error.log
 # Finalize the JSON report
 sed -i '$ s/,$//' temp_report.json # Remove trailing comma from the last JSON object
 echo "]" >> temp_report.json
