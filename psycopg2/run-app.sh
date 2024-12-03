@@ -74,7 +74,7 @@ run_test "TestClusterAwareRR.test_cluster_aware_rr_all_cases" "test_cluster_awar
 
 run_test "TestTopologyAwareRR.test_topology_aware_rr_all_cases" "test_topology_aware_rr" 2> unittest_error.log
 # Finalize the JSON report
-sed -i '' '$ s/,$//' temp_report.json # Remove trailing comma from the last JSON object
+sed -i '$ s/,$//' temp_report.json # Remove trailing comma from the last JSON object
 echo "]" >> temp_report.json
 
 # Move the temporary report to the final report file
