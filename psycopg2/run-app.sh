@@ -15,12 +15,10 @@ run_test() {
     python3 -m unittest "${script_name}.${test_name}"
     local exit_status=$?
     if [ $exit_status -eq 0 ]; then
-        echo "{ \"test_name\": \"$test_name\", \"script_name\": \"psycopg2/$script_name.py\", \"result\": \"PASSED\", \"error_stack\": \"\" }," >> temp_report.json
+        python $WORKSPACE/utils/create_json.py --test_name $test_name --script_name psycopg2/$script_name.py --result PASSED >> temp_report.json 
     else
         tail -n 10 unittest_error.log | awk '{printf "%s\\n", $0}' > stack4json.log
-        sed -n '/Error/,$p' "${script_name}-${test_case}.log" | awk '{printf "%s\\n", $0}' > stack4json.log
-        sed -i 's/\\\([^"'\'']\)/\\\\\1/g' stack4json.log  # Insert \ before another \ which is not followed by either " or '
-        echo "{ \"test_name\": \"$test_name\", \"script_name\": \"$script_name.py\", \"result\": \"FAILED\", \"error_stack\": \"$(cat stack4json.log)\" }," >> temp_report.json
+        python $WORKSPACE/utils/create_json.py --test_name $test_name --script_name psycopg2/$script_name.py --result PASSED --file_path stack4json.log >> temp_report.json  
         OVERALL_STATUS=1
     fi
 }
