@@ -43,6 +43,7 @@ run_test() {
       else
         # Cluster creation or cleanup failed, get the last 10 lines 
         tail -n 10 ${test_name}.log > stack4json.log
+      fi
       python $WORKSPACE/integrations/utils/create_json.py --test_name $test_name --script_name $script_name --result FAILED --file_path stack4json.log >> temp_report.json
       OVERALL_STATUS=1
     else
