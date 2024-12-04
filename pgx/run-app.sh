@@ -27,11 +27,11 @@ run_test() {
     fi
     if ! grep "$message" ${test_name}_${tc_name}.log; then
       tail -n 30 ${test_name}_${tc_name}.log > stack4json.log
-      local tname = "$test_name_$tc_name"
+      local tname = "${test_name}_${tc_name}"
       python $WORKSPACE/integrations/utils/create_json.py --test_name $tname --script_name $script_name --result FAILED --file_path stack4json.log >> temp_report.json
       OVERALL_STATUS=1
     else
-      local tname = "$test_name_$tc_name"
+      local tname = "${test_name}_${tc_name}"
       echo "Example $tname completed"
       python $WORKSPACE/integrations/utils/create_json.py --test_name $tname --script_name $script_name --result PASSED >> temp_report.json
     fi
