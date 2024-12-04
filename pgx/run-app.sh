@@ -64,9 +64,9 @@ echo "Running tests"
 # Initialize the JSON report
 echo "[" > temp_report.json
 
-# run_test " " "basic" "Closing the application ..." "pgx/start.sh"
+run_test " " "basic" "Closing the application ..." "pgx/start.sh"
 
-# run_test "pool" "pool" "Closing the application ..." "pgx/start.sh"
+run_test "pool" "pool" "Closing the application ..." "pgx/start.sh"
 
 run_test "fallbackTest" "checkNodeDownBehaviorMultiFallback" "End of checkNodeDownBehaviorMultiFallback() ..." "pgx/start.sh"
 
