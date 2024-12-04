@@ -2,6 +2,27 @@
 set -e
 
 DIR="driver-examples"
+REPORT_FILE="$WORKSPACE/artifacts/test_report_rust_postgres.json"
+OVERALL_STATUS=0
+
+# Function to run individual test cases and capture their results
+run_test() {
+    local test_name=$1
+    local script_name=$2
+    echo "Running $test_name from $script_name..."
+
+    # Run the specific test case and capture errors
+    cargo run --bin "$test_name"  2>&1 | tee ${test_name}.log
+    if ! grep "End of Example" ${test_name}.log; then
+      tail -n 30 ${test_name}.log > stack4json.log
+      python $WORKSPACE/integrations/utils/create_json.py --test_name $test_name --script_name $script_name --result FAILED --file_path stack4json.log >> temp_report.json
+      OVERALL_STATUS=1
+    else
+      echo "Example $test_name completed"
+      python $WORKSPACE/integrations/utils/create_json.py --test_name $test_name --script_name $script_name --result PASSED >> temp_report.json
+    fi
+}
+
 if [ -d "$DIR" ]; then
  echo "driver-examples repository is already present"
  cd driver-examples
@@ -23,40 +44,36 @@ echo "Exporting environment variable YB_PATH with the value of the path of the Y
 
 export YB_PATH="$YUGABYTE_HOME_DIRECTORY"
 
+# Initialize the JSON report
+echo "[" > temp_report.json
+
 echo "Running examples"
 
-cargo run --bin ybsql_load_balance 2>&1 | tee $ARTIFACTS_PATH/rust_ybsql_load_balance.txt
+run_test "ybsql_load_balance" "rust-postgres/start.sh"
 
-echo "Example 1 (ybsql_load_balance) completed"
+run_test "ybsql_fallback_example1" "rust-postgres/start.sh"
 
-cargo run --bin ybsql_fallback_example1 2>&1 | tee $ARTIFACTS_PATH/rust_ybsql_fallback_example1.txt
+run_test "ybsql_fallback_example2" "rust-postgres/start.sh"
 
-echo "Example 2 (ybsql_fallback_example1) completed"
+run_test "ybsql_fallback_example3" "rust-postgres/start.sh"
 
-cargo run --bin ybsql_fallback_example2 2>&1 | tee $ARTIFACTS_PATH/rust_ybsql_fallback_example2.txt
+run_test "ulb_multithread" "rust-postgres/start.sh"
 
-echo "Example 3 (ybsql_fallback_example2) completed"
+run_test "talb_multithread" "rust-postgres/start.sh"
 
-cargo run --bin ybsql_fallback_example3 2>&1 | tee $ARTIFACTS_PATH/rust_ybsql_fallback_example3.txt
+# Finalize the JSON report
+sed -i '$ s/,$//' temp_report.json # Remove trailing comma from the last JSON object
+echo "]" >> temp_report.json
+sed -i 's/\t/    /g' temp_report.json # Replace tabs with spaces
 
-echo "Example 4 (ybsql_fallback_example3) completed"
+# Move the temporary report to the final report file
+mv temp_report.json "$REPORT_FILE"
 
-cargo run --bin ulb_multithread 2>&1 | tee $ARTIFACTS_PATH/rust_ulb_multithread.txt
+# Display the JSON report
+echo "TEST REPORT -------------------------"
+cat "$REPORT_FILE"
 
-echo "Example 5 (ulb_multithread) completed"
+readlink -f "$REPORT_FILE"
 
-cargo run --bin talb_multithread 2>&1 | tee $ARTIFACTS_PATH/rust_talb_multithread.txt
-
-echo "Example 6 (talb_multithread) completed"
-
-grep "End of Example" $ARTIFACTS_PATH/rust_ybsql_load_balance.txt
-
-grep "End of Example" $ARTIFACTS_PATH/rust_ybsql_fallback_example1.txt
-
-grep "End of Example" $ARTIFACTS_PATH/rust_ybsql_fallback_example2.txt
-
-grep "End of Example" $ARTIFACTS_PATH/rust_ybsql_fallback_example3.txt
-
-grep "End of Example" $ARTIFACTS_PATH/rust_ulb_multithread.txt
-
-grep "End of Example" $ARTIFACTS_PATH/rust_talb_multithread.txt
+# Exit with the overall status
+exit $OVERALL_STATUS

@@ -14,6 +14,9 @@ echo "Installing winston logging package"
 npm install winston
 
 DIR="driver-examples"
+REPORT_FILE="$WORKSPACE/artifacts/test_report_node_postgres.json"
+OVERALL_STATUS=0
+
 if [ -d "$DIR" ]; then
  echo "driver-examples repository is already present"
  cd driver-examples
@@ -24,6 +27,30 @@ else
  git clone git@github.com:yugabyte/driver-examples.git
  cd driver-examples
 fi
+
+# Function to run individual test cases and capture their results
+run_test() {
+    local test_name=$1
+    local script_name=$2
+    echo "Running $test_name from $script_name..."
+
+    # Run the specific test case and capture errors
+    node "$test_name.js"  2>&1 | tee ${test_name}.log
+    if ! grep "Test Completed" ${test_name}.log; then
+      if grep "Verification failed:" ${test_name}.log; then
+         # Get the lines after 'Verification failed:' which is the stack trace
+        sed -n '/Verification failed:/,$p' "${test_name}.log" > stack4json.log
+      else
+        # Cluster creation or cleanup failed, get the last 10 lines 
+        tail -n 10 ${test_name}.log > stack4json.log
+      fi
+      python $WORKSPACE/integrations/utils/create_json.py --test_name $test_name --script_name $script_name --result FAILED --file_path stack4json.log >> temp_report.json
+      OVERALL_STATUS=1
+    else
+      echo "Test $test_name completed"
+      python $WORKSPACE/integrations/utils/create_json.py --test_name $test_name --script_name $script_name --result PASSED >> temp_report.json
+    fi
+}
 
 cd nodejs
 npm install
@@ -36,88 +63,52 @@ echo "Exporting log level."
 
 export LOG_LEVEL="silly"
 
+# Initialize the JSON report
+echo "[" > temp_report.json
+
 echo "Running tests"
 
-node yb-fallback-star-1.js 2>&1 | tee $ARTIFACTS_PATH/yb-fallback-star-1.txt
+run_test "yb-fallback-star-1" "node-postgres/start.sh"
 
-echo "Test 1 (yb-fallback-star-1) completed"
+run_test "yb-fallback-star-2" "node-postgres/start.sh"
 
-node yb-fallback-star-2.js 2>&1 | tee $ARTIFACTS_PATH/yb-fallback-star-2.txt
+run_test "yb-fallback-test-1" "node-postgres/start.sh"
 
-echo "Test 2 (yb-fallback-star-2) completed"
+run_test "yb-fallback-test-2" "node-postgres/start.sh"
 
-node yb-fallback-test-1.js 2>&1 | tee $ARTIFACTS_PATH/yb-fallback-test-1.txt
+run_test "yb-fallback-test-3" "node-postgres/start.sh"
 
-echo "Test 3 (yb-fallback-test-1) completed"
+run_test "yb-fallback-topology-aware-1" "node-postgres/start.sh"
 
-node yb-fallback-test-2.js 2>&1 | tee $ARTIFACTS_PATH/yb-fallback-test-2.txt
+run_test "yb-fallback-topology-aware-2" "node-postgres/start.sh"
 
-echo "Test 4 (yb-fallback-test-2) completed"
+run_test "yb-fallback-topology-aware-3" "node-postgres/start.sh"
 
-node yb-fallback-test-3.js 2>&1 | tee $ARTIFACTS_PATH/yb-fallback-test-3.txt
+run_test "yb-load-balance-with-add-node" "node-postgres/start.sh"
 
-echo "Test 5 (yb-fallback-test-3) completed"
+run_test "yb-load-balance-with-stop-node" "node-postgres/start.sh"
 
-node yb-fallback-topology-aware-1 2>&1 | tee $ARTIFACTS_PATH/yb-fallback-topology-aware-1.txt
+run_test "yb-pooling-with-load-balance" "node-postgres/start.sh"
 
-echo "Test 6 (yb-fallback-topology-aware-1) completed"
+run_test "yb-pooling-with-topology-aware" "node-postgres/start.sh"
 
-node yb-fallback-topology-aware-2.js 2>&1 | tee $ARTIFACTS_PATH/yb-fallback-topology-aware-2.txt
+run_test "yb-topology-aware-with-add-node" "node-postgres/start.sh"
 
-echo "Test 7 (yb-fallback-topology-aware-2) completed"
+run_test "yb-topology-aware-with-stop-node" "node-postgres/start.sh"
 
-node yb-fallback-topology-aware-3.js 2>&1 | tee $ARTIFACTS_PATH/yb-fallback-topology-aware-3.txt
+# Finalize the JSON report
+sed -i '$ s/,$//' temp_report.json # Remove trailing comma from the last JSON object
+echo "]" >> temp_report.json
+sed -i 's/\t/    /g' temp_report.json # Replace tabs with spaces
 
-echo "Test 8 (yb-fallback-topology-aware-3) completed"
+# Move the temporary report to the final report file
+mv temp_report.json "$REPORT_FILE"
 
-node yb-load-balance-with-add-node.js 2>&1 | tee $ARTIFACTS_PATH/yb-load-balance-with-add-node.txt
+# Display the JSON report
+echo "TEST REPORT -------------------------"
+cat "$REPORT_FILE"
 
-echo "Test 9 (yb-load-balance-with-add-node) completed"
+readlink -f "$REPORT_FILE"
 
-node yb-load-balance-with-stop-node.js 2>&1 | tee $ARTIFACTS_PATH/yb-load-balance-with-stop-node.txt
-
-echo "Test 10 (yb-load-balance-with-stop-node) completed"
-
-node yb-pooling-with-load-balance.js 2>&1 | tee $ARTIFACTS_PATH/yb-pooling-with-load-balance.txt
-
-echo "Test 11 (yb-pooling-with-load-balance) completed"
-
-node yb-pooling-with-topology-aware.js 2>&1 | tee $ARTIFACTS_PATH/yb-pooling-with-topology-aware.txt
-
-echo "Test 12 (yb-pooling-with-topology-aware) completed"
-
-node yb-topology-aware-with-add-node.js 2>&1 | tee $ARTIFACTS_PATH/yb-topology-aware-with-add-node.txt
-
-echo "Test 13 (yb-topology-aware-with-add-node) completed"
-
-node yb-topology-aware-with-stop-node.js 2>&1 | tee $ARTIFACTS_PATH/yb-topology-aware-with-stop-node.txt
-
-echo "Test 14 (yb-topology-aware-with-stop-node) completed"
-
-grep "Test Completed" $ARTIFACTS_PATH/yb-fallback-star-1.txt
-
-grep "Test Completed" $ARTIFACTS_PATH/yb-fallback-star-2.txt
-
-grep "Test Completed" $ARTIFACTS_PATH/yb-fallback-test-1.txt
-
-grep "Test Completed" $ARTIFACTS_PATH/yb-fallback-test-2.txt
-
-grep "Test Completed" $ARTIFACTS_PATH/yb-fallback-test-3.txt
-
-grep "Test Completed" $ARTIFACTS_PATH/yb-fallback-topology-aware-1.txt
-
-grep "Test Completed" $ARTIFACTS_PATH/yb-fallback-topology-aware-2.txt
-
-grep "Test Completed" $ARTIFACTS_PATH/yb-fallback-topology-aware-3.txt
-
-grep "Test Completed" $ARTIFACTS_PATH/yb-load-balance-with-add-node.txt
-
-grep "Test Completed" $ARTIFACTS_PATH/yb-load-balance-with-stop-node.txt
-
-grep "Test Completed" $ARTIFACTS_PATH/yb-pooling-with-load-balance.txt
-
-grep "Test Completed" $ARTIFACTS_PATH/yb-pooling-with-topology-aware.txt
-
-grep "Test Completed" $ARTIFACTS_PATH/yb-topology-aware-with-add-node.txt
-
-grep "Test Completed" $ARTIFACTS_PATH/yb-topology-aware-with-stop-node.txt
+# Exit with the overall status
+exit $OVERALL_STATUS
