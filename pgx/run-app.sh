@@ -8,30 +8,32 @@ OVERALL_STATUS=0
 # Function to run individual test cases and capture their results
 run_test() {
     local test_name=$1
-    local test_num=$2
+    local tc_name=$2
     local message=$3
     local script_name=$4
 
     # Run the specific test case and capture errors
-    if [ $test_num -eq -1 ]; then
+    if [ $tc_name == "basic" ]; then
         test_name="load_balance"
-        test_num=0
         echo "Running ybsql_load_balance from $script_name..."
-        ./ybsql_load_balance $YUGABYTE_HOME_DIRECTORY 2>&1 | tee ${test_name}_${test_num}.log
-    elif [ $test_num -eq 0 ]; then
+        ./ybsql_load_balance $YUGABYTE_HOME_DIRECTORY 2>&1 | tee ${test_name}_${tc_name}.log
+    elif [ $tc_name == "pool" ]; then
+        tc_name="test"
         echo "Running pool example from $script_name..."
-        ./ybsql_load_balance $YUGABYTE_HOME_DIRECTORY --pool 2>&1 | tee ${test_name}_${test_num}.log
+        ./ybsql_load_balance $YUGABYTE_HOME_DIRECTORY --pool 2>&1 | tee ${test_name}_${tc_name}.log
     else
         echo "Running $test_name from $script_name..."
-        ./ybsql_load_balance $YUGABYTE_HOME_DIRECTORY "--$test_name" "$test_num" 2>&1 | tee ${test_name}_${test_num}.log
+        ./ybsql_load_balance $YUGABYTE_HOME_DIRECTORY "--$test_name" "$tc_name" 2>&1 | tee ${test_name}_${tc_name}.log
     fi
-    if ! grep "$message" ${test_name}_${test_num}.log; then
-      tail -n 30 ${test_name}_${test_num}.log > stack4json.log
-      python $WORKSPACE/integrations/utils/create_json.py --test_name $test_name --script_name $script_name --result FAILED --file_path stack4json.log >> temp_report.json
+    if ! grep "$message" ${test_name}_${tc_name}.log; then
+      tail -n 30 ${test_name}_${tc_name}.log > stack4json.log
+      local tname = "$test_name_$tc_name"
+      python $WORKSPACE/integrations/utils/create_json.py --test_name $tname --script_name $script_name --result FAILED --file_path stack4json.log >> temp_report.json
       OVERALL_STATUS=1
     else
-      echo "Example $test_name completed"
-      python $WORKSPACE/integrations/utils/create_json.py --test_name $test_name --script_name $script_name --result PASSED >> temp_report.json
+      local tname = "$test_name_$tc_name"
+      echo "Example $tname completed"
+      python $WORKSPACE/integrations/utils/create_json.py --test_name $tname --script_name $script_name --result PASSED >> temp_report.json
     fi
 }
 
@@ -62,19 +64,19 @@ echo "Running tests"
 # Initialize the JSON report
 echo "[" > temp_report.json
 
-run_test " " "-1" "Closing the application ..." "pgx/start.sh"
+run_test " " "basic" "Closing the application ..." "pgx/start.sh"
 
-run_test "pool" "0" "Closing the application ..." "pgx/start.sh"
+run_test "pool" "pool" "Closing the application ..." "pgx/start.sh"
 
-run_test "fallbackTest" "1" "End of checkNodeDownBehaviorMultiFallback() ..." "pgx/start.sh"
+run_test "fallbackTest" "checkNodeDownBehaviorMultiFallback" "End of checkNodeDownBehaviorMultiFallback() ..." "pgx/start.sh"
 
-run_test "fallbackTest" "2" "End of checkMultiNodeDown() ..." "pgx/start.sh"
+run_test "fallbackTest" "checkMultiNodeDown" "End of checkMultiNodeDown() ..." "pgx/start.sh"
 
-run_test "fallbackTest" "3" "End of checkNodeDownPrimary() ..." "pgx/start.sh"
+run_test "fallbackTest" "checkNodeDownPrimary" "End of checkNodeDownPrimary() ..." "pgx/start.sh"
 
-run_test "rr" "1" "Closing the application ..." "pgx/start.sh"
+run_test "rr" "clusterAwareRRTest" "Closing the application ..." "pgx/start.sh"
 
-run_test "rr" "2" "Closing the application ..." "pgx/start.sh"
+run_test "rr" "topologyAwareRRTest" "Closing the application ..." "pgx/start.sh"
 
 # Finalize the JSON report
 sed -i '$ s/,$//' temp_report.json # Remove trailing comma from the last JSON object
