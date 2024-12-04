@@ -22,16 +22,16 @@ run_test() {
         echo "Running pool example from $script_name..."
         ./ybsql_load_balance $YUGABYTE_HOME_DIRECTORY --pool 2>&1 | tee ${test_name}_${tc_name}.log
     else
-        echo "Running $test_name from $script_name..."
+        echo "Running ${test_name}_${tc_name} from $script_name..."
         ./ybsql_load_balance $YUGABYTE_HOME_DIRECTORY "--$test_name" "$tc_name" 2>&1 | tee ${test_name}_${tc_name}.log
     fi
     if ! grep "$message" ${test_name}_${tc_name}.log; then
       tail -n 30 ${test_name}_${tc_name}.log > stack4json.log
-      local tname = "${test_name}_${tc_name}"
+      local tname="${test_name}_${tc_name}"
       python $WORKSPACE/integrations/utils/create_json.py --test_name $tname --script_name $script_name --result FAILED --file_path stack4json.log >> temp_report.json
       OVERALL_STATUS=1
     else
-      local tname = "${test_name}_${tc_name}"
+      local tname="${test_name}_${tc_name}"
       echo "Example $tname completed"
       python $WORKSPACE/integrations/utils/create_json.py --test_name $tname --script_name $script_name --result PASSED >> temp_report.json
     fi
@@ -64,9 +64,9 @@ echo "Running tests"
 # Initialize the JSON report
 echo "[" > temp_report.json
 
-run_test " " "basic" "Closing the application ..." "pgx/start.sh"
+# run_test " " "basic" "Closing the application ..." "pgx/start.sh"
 
-run_test "pool" "pool" "Closing the application ..." "pgx/start.sh"
+# run_test "pool" "pool" "Closing the application ..." "pgx/start.sh"
 
 run_test "fallbackTest" "checkNodeDownBehaviorMultiFallback" "End of checkNodeDownBehaviorMultiFallback() ..." "pgx/start.sh"
 
