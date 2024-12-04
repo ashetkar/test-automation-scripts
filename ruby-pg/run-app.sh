@@ -41,14 +41,12 @@ run_test() {
     echo "Running ${script_name} ${test_case}..."
     ./${script_name} ${test_case} 2>&1 | tee "${script_name}-${test_case}.log"
     if grep "Error" "${script_name}-${test_case}.log"; then
-      # Get the lines after 'Error' which is the stack trace and replace new lines with '\n'
-      sed -n '/Error/,$p' "${script_name}-${test_case}.log" | awk '{printf "%s\\n", $0}' > stack4json.log
-      sed -i 's/\\\([^"'\'']\)/\\\\\1/g' stack4json.log  # Insert \ before another \ which is not followed by either " or '
-      sed -i 's/\"/\\\\\"/g' stack4json.log  # Replace " with \"
-      echo "{ \"test_name\": \"$test_case\", \"script_name\": \"$script_name\", \"result\": \"FAILED\", \"error_stack\": \"$(cat stack4json.log)\" }," >> temp_report.json
+      # Get the lines after 'Error' which is the stack trace
+      sed -n '/Error/,$p' "${script_name}-${test_case}.log" > stack4json.log
+      python $WORKSPACE/integrations/utils/create_json.py --test_name $test_case --script_name $script_name --result FAILED --file_path stack4json.log >> temp_report.json  
       RESULT=1
     else
-      echo "{ \"test_name\": \"$test_case\", \"script_name\": \"$script_name\", \"result\": \"PASSED\", \"error_stack\": \"\" }," >> temp_report.json
+      python $WORKSPACE/integrations/utils/create_json.py --test_name $test_case --script_name $script_name --result PASSED >> temp_report.json  
     fi
 }
 
