@@ -31,7 +31,7 @@ run_test() {
     local tname=${test_name%.main}
     YBDB_PATH=$YUGABYTE_HOME_DIRECTORY mvn exec:java -Dexec.mainClass=com.yugabyte.ysql.${tname}  2>&1 | tee ${test_name}.log
     if ! grep "BUILD SUCCESS" ${test_name}.log; then
-      # Get the lines between '[WARNING]' and 'BUILD FAILURE' which is the stack trace and replace new lines with '\n'
+      # Get the lines between '[WARNING]' and 'BUILD FAILURE' which is the stack trace
       sed -n '/\[WARNING\]/,/BUILD FAILURE/{/\[WARNING\]/b;/BUILD FAILURE/b;p}' ${test_name}.log > stack4json.log
       python $WORKSPACE/integrations/utils/create_json.py --test_name $test_name --script_name $script_name --result FAILED --file_path stack4json.log >> temp_report.json  
       RESULT=1
