@@ -42,12 +42,12 @@ run_test() {
         sed -n '/Verification failed:/,$p' "${test_name}.log" > stack4json.log
       else
         # Cluster creation or cleanup failed, get the last 10 lines 
-        tail -n 10 ${test_name}.log | awk '{printf "%s\\n", $0}' > stack4json.log
-      echo "{ \"test_name\": \"$test_name\", \"script_name\": \"$script_name.py\", \"result\": \"FAILED\", \"error_stack\": \"$(cat stack4json.log)\" }," >> temp_report.json
+        tail -n 10 ${test_name}.log > stack4json.log
+      python $WORKSPACE/integrations/utils/create_json.py --test_name $test_name --script_name $script_name --result FAILED --file_path stack4json.log >> temp_report.json
       OVERALL_STATUS=1
     else
       echo "Test $test_name completed"
-      echo "{ \"test_name\": \"$test_name\", \"script_name\": \"$script_name\", \"result\": \"PASSED\", \"error_stack\": \"\" }," >> temp_report.json
+      python $WORKSPACE/integrations/utils/create_json.py --test_name $test_name --script_name $script_name --result PASSED >> temp_report.json
     fi
 }
 
