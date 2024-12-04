@@ -37,7 +37,12 @@ run_test() {
     # Run the specific test case and capture errors
     node "$test_name.js"  2>&1 | tee ${test_name}.log
     if ! grep "Test Completed" ${test_name}.log; then
-      tail -n 30 ${test_name}.log | awk '{printf "%s\\n", $0}' > stack4json.log
+      if grep "Verification failed:" ${test_name}.log; then
+         # Get the lines after 'Verification failed:' which is the stack trace
+        sed -n '/Verification failed:/,$p' "${test_name}.log" > stack4json.log
+      else
+        # Cluster creation or cleanup failed, get the last 10 lines 
+        tail -n 10 ${test_name}.log | awk '{printf "%s\\n", $0}' > stack4json.log
       echo "{ \"test_name\": \"$test_name\", \"script_name\": \"$script_name.py\", \"result\": \"FAILED\", \"error_stack\": \"$(cat stack4json.log)\" }," >> temp_report.json
       OVERALL_STATUS=1
     else
