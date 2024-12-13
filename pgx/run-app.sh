@@ -57,7 +57,7 @@ go mod tidy
 
 echo "Building the example"
 
-go build ybsql_load_balance.go ybsql_load_balance_pool.go ybsql_fallback.go performance_test_parallel.go performace_test_sequential.go ybsql_read_replica1.go ybsql_read_replica2.go
+go build ybsql_load_balance.go ybsql_load_balance_pool.go ybsql_fallback.go performance_test_parallel.go performace_test_sequential.go ybsql_read_replica1.go ybsql_read_replica2.go multiple_pool_example.go
 
 echo "Running tests"
 
