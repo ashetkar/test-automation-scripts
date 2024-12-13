@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+export PATH=/usr/lib/jvm/zulu-11.jdk/bin/:$PATH
+java -version
+
 DIR="driver-examples"
 REPORT_FILE="$WORKSPACE/artifacts/test_report_jdbc_ysql.json"
 
