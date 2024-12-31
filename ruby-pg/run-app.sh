@@ -63,6 +63,8 @@ run_test "fallback_lb_test_extended.rb" check_multi_node_down_with_props
 run_test "fallback_lb_test_extended.rb" check_node_down_primary_with_props
 run_test "load_balance_test.rb" basic
 run_test "load_balance_test.rb" with_topology_keys
+run_test "rr_cluster_aware_test.rb" all
+run_test "rr_topology_aware_test.rb" all
 
 sed -i '$ s/,$//' temp_report.json # Remove trailing comma from the last JSON object
 echo "]" >> temp_report.json

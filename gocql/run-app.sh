@@ -17,4 +17,34 @@ echo "Running tests"
 
 go clean -testcache
 
-go test -v
+# Run the specific test case and capture errors
+echo "Running gocql tests..."
+go test -v 2>&1 | tee gocql-tests.log
+
+echo "[" >> temp_report.json
+
+if grep "FAIL:" "gocql-tests.log"; then
+  # Get the lines with 'FAIL'
+  grep -B 1 "FAIL: " gocql-tests.log > stack4json.log
+  test_name=`sed -n '/^.*FAIL:\s\+\(\w\+\).*$/s//\1/p' gocql-tests.log`
+  python $WORKSPACE/integrations/utils/create_json.py --test_name $test_name --script_name go_test --result FAILED --file_path stack4json.log >> temp_report.json
+  RESULT=1
+else
+  python $WORKSPACE/integrations/utils/create_json.py --test_name $test_name --script_name go_test --result PASSED >> temp_report.json
+fi
+
+sed -i '$ s/,$//' temp_report.json # Remove trailing comma from the last JSON object
+echo "]" >> temp_report.json
+sed -i 's/\t/    /g' temp_report.json # Replace tabs with spaces
+
+# Move the temporary report to the final report file
+mv temp_report.json "$REPORT_FILE"
+
+# Display the JSON report
+echo "TEST REPORT -------------------------"
+cat "$REPORT_FILE"
+
+readlink -f "$REPORT_FILE"
+
+exit $RESULT
+
