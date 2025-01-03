@@ -2,6 +2,8 @@
 set -e
 
 DIR="gocql"
+REPORT_FILE="$WORKSPACE/artifacts/test_report_gocql.json"
+
 if [ -d "$DIR" ]; then
  echo "gocql repository is already present"
  cd gocql
