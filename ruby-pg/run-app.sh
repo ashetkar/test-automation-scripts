@@ -14,7 +14,7 @@ fi
 cd ruby-pg
 git checkout logger-fix
 git pull
-
+export PATH=$PATH:/var/lib/jenkins/bin
 gem install rake
 rake clean compile
 gem build yugabytedb-ysql.gemspec
