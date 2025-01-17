@@ -4,6 +4,23 @@ set -e
 DIR="driver-examples"
 REPORT_FILE="$WORKSPACE/artifacts/test_report_ruby-pg_tests.json"
 
+if [ -d "ruby-pg" ]; then
+ echo "ruby-pg repository is already present"
+else
+ echo "Cloning the ruby-pg repository"
+ git clone "git@github.com:yugabyte/ruby-pg.git"
+fi
+
+cd ruby-pg
+git checkout logger-fix
+git pull
+
+rake clean compile
+gem build yugabytedb-ysql.gemspec
+echo "Installing the ysql gem..."
+gem install --local yugabytedb-ysql-0.7.gem
+cd ..
+
 if [ -d "$DIR" ]; then
  echo "$DIR repository is already present"
 else
@@ -25,8 +42,8 @@ echo "listing /var/lib/jenkins/bin: $(ls -l /var/lib/jenkins/bin)"
 echo "PATH: $PATH"
 echo "GEM_HOME: $GEM_HOME"
 export PATH=$PATH:/var/lib/jenkins/bin
-echo "Installing the ysql gem..."
-gem install yugabytedb-ysql -- --with-pg-config=$YBDB_PATH/postgres/bin/pg_config
+# echo "Installing the ysql gem..."
+# gem install yugabytedb-ysql -- --with-pg-config=$YBDB_PATH/postgres/bin/pg_config
 echo "Installing the concurrent gem..."
 gem install concurrent-ruby
 echo "Installing the pg gem..."
