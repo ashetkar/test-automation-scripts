@@ -22,6 +22,7 @@ gem install rspec-core
 gem install rspec-expectations
 gem install rspec-mocks
 gem install rspec-support
+gem install bundler
 
 rake clean compile
 gem build yugabytedb-ysql.gemspec
