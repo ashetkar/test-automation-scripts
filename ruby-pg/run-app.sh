@@ -15,6 +15,7 @@ cd ruby-pg
 git checkout logger-fix
 git pull
 
+gem install rake
 rake clean compile
 gem build yugabytedb-ysql.gemspec
 echo "Installing the ysql gem..."
