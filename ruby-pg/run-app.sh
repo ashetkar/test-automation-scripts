@@ -18,7 +18,7 @@ cd ruby/ysql
 
 export YBDB_PATH=$YUGABYTE_HOME_DIRECTORY
 
-$YBDB_PATH/bin/yugabytedb destroy
+$YBDB_PATH/bin/yugabyted destroy
 $YBDB_PATH/bin/yb-ctl destroy
 $YBDB_PATH/bin/yb-ctl start
 sleep 5
