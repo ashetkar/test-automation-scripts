@@ -21,10 +21,11 @@ export YBDB_PATH=$YUGABYTE_HOME_DIRECTORY
 $YBDB_PATH/bin/yugabyted destroy
 $YBDB_PATH/bin/yb-ctl destroy
 $YBDB_PATH/bin/yb-ctl start
-sleep 5
-YB_VERSION=`$YBDB_PATH/bin/ysqlsh -c "select version()" | grep "PostgreSQL 11.2"`
+sleep 15
+echo "Checking YugabyteDB's PG version ..."
+YB_VERSION=`$YBDB_PATH/bin/ysqlsh -c "select version()"`
 $YBDB_PATH/bin/yb-ctl destroy
-if [[  "$YB_VERSION" ]]; then
+if grep "PostgreSQL 11.2" <<< "$YB_VERSION"; then
   echo "------------ SKIPPING RUBY TESTS SINCE YBDB VERSION IS NOT SUPPORTED ----------"
   echo "[]" > "$REPORT_FILE"
   exit 0
