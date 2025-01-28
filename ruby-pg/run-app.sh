@@ -26,6 +26,7 @@ YB_VERSION=`$YBDB_PATH/bin/ysqlsh -c "select version()" | grep "PostgreSQL 11.2"
 $YBDB_PATH/bin/yb-ctl destroy
 if [[  "$YB_VERSION" ]]; then
   echo "------------ SKIPPING RUBY TESTS SINCE YBDB VERSION IS NOT SUPPORTED ----------"
+  echo "[]" > "$REPORT_FILE"
   exit 0
 fi
 
