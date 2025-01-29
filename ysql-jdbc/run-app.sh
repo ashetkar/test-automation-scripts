@@ -20,7 +20,7 @@ fi
 cd java/ysql-jdbc
 
 echo "Compiling the YSQL JDBC tests ..."
-mvn clean compile
+mvn clean compile --no-transfer-progress
 
 RESULT=0
 

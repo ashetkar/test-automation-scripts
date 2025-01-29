@@ -18,6 +18,19 @@ cd ruby/ysql
 
 export YBDB_PATH=$YUGABYTE_HOME_DIRECTORY
 
+$YBDB_PATH/bin/yugabyted destroy
+$YBDB_PATH/bin/yb-ctl destroy
+$YBDB_PATH/bin/yb-ctl start
+sleep 15
+echo "Checking YugabyteDB's PG version ..."
+YB_VERSION=`$YBDB_PATH/bin/ysqlsh -c "select version()"`
+$YBDB_PATH/bin/yb-ctl destroy
+if grep "PostgreSQL 11.2" <<< "$YB_VERSION"; then
+  echo "------------ SKIPPING RUBY TESTS SINCE YBDB VERSION IS NOT SUPPORTED ----------"
+  echo "[]" > "$REPORT_FILE"
+  exit 0
+fi
+
 echo "which gem? $(which gem)"
 echo "Gem.user_dir: $(ruby -e 'puts Gem.user_dir')"
 echo "ruby version: $(ruby -v) and gem version: $(gem -v)"
