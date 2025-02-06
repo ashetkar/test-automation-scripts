@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+REPORT_FILE="$WORKSPACE/artifacts/test_report_liquibase_plugin.json"
 
 echo "Cloning the liquibase extension repository"
 
