@@ -14,25 +14,50 @@ sed -i 's@${YUGABYTE_RELEASE_NUMBER}@'"$YUGABYTE_RELEASE_NUMBER"'@' src/test/res
 
 echo "Building the Liquibase tests"
 JAVA_HOME=/usr/lib/jvm/zulu-11.jdk mvn -ntp -q clean install
+
+# Function to run individual test cases and capture their results
+run_test() {
+    local test_name=$1
+    local script_name=$2
+
+    if [ $test_name == " " ]; then
+      tc_name="default"
+    else
+      tc_name=$test_name
+
+    # Run the specific test case and capture errors
+    JAVA_HOME=/usr/lib/jvm/zulu-11.jdk mvn -ntp test ${test_name} 2>&1 | tee ${tc_name}.log
+    
+    if ! grep "BUILD SUCCESS" ${tc_name}.log; then
+      # Get the lines between 'FAILURE!' and 'BUILD FAILURE' which is the stack trace
+      sed -n '/FAILURE!/,/BUILD FAILURE/{/FAILURE!/b;/BUILD FAILURE/b;p}' ${tc_name}.log > stack4json.log
+      python $WORKSPACE/integrations/utils/create_json.py --test_name $tc_name --script_name $script_name --result FAILED --file_path stack4json.log >> temp_report.json  
+      RESULT=1
+    else
+      python $WORKSPACE/integrations/utils/create_json.py --test_name $tc_name --script_name $script_name --result PASSED >> temp_report.json  
+    fi
+}
+
+echo "[" > temp_report.json
+
 echo "Running the Liquibase tests"
-JAVA_HOME=/usr/lib/jvm/zulu-11.jdk mvn -ntp test 2>&1 | tee $ARTIFACTS_PATH/liquibase_yugabytedb_test_report.txt
-JAVA_HOME=/usr/lib/jvm/zulu-11.jdk mvn -ntp -Dtest=FoundationalExtensionHarnessSuite test 2>&1 | tee $ARTIFACTS_PATH/liquibase_foundational_test_report.txt
-JAVA_HOME=/usr/lib/jvm/zulu-11.jdk mvn -ntp -Dtest=AdvancedExtensionHarnessSuite test 2>&1 | tee $ARTIFACTS_PATH/liquibase_advanced_test_report.txt
+run_test " "                                 "liquibase/start.sh"
+run_test "FoundationalExtensionHarnessSuite" "liquibase/start.sh"
+run_test "AdvancedExtensionHarnessSuite"     "liquibase/start.sh"
 
-echo "Checking the Liquibase test reports"
-if [ $(grep -c "BUILD SUCCESS" $ARTIFACTS_PATH/liquibase_yugabytedb_test_report.txt) -eq 0 ]
-then
-  cat $ARTIFACTS_PATH/liquibase_yugabytedb_test_report.txt
-fi
-if [ $(grep -c "BUILD SUCCESS" $ARTIFACTS_PATH/liquibase_foundational_test_report.txt) -eq 0 ]
-then
-  cat $ARTIFACTS_PATH/liquibase_foundational_test_report.txt
-fi
-if [ $(grep -c "BUILD SUCCESS" $ARTIFACTS_PATH/liquibase_advanced_test_report.txt) -eq 0 ]
-then
-  cat $ARTIFACTS_PATH/liquibase_advanced_test_report.txt
-fi
+sed -i '$ s/,$//' temp_report.json # Remove trailing comma from the last JSON object
+echo "]" >> temp_report.json
+sed -i 's/\t/    /g' temp_report.json # Replace tabs with spaces
 
-! grep "BUILD FAILURE" $ARTIFACTS_PATH/liquibase_yugabytedb_test_report.txt
-! grep "BUILD FAILURE" $ARTIFACTS_PATH/liquibase_foundational_test_report.txt
-! grep "BUILD FAILURE" $ARTIFACTS_PATH/liquibase_advanced_test_report.txt
+# Move the temporary report to the final report file
+mv temp_report.json "$REPORT_FILE"
+
+# Display the JSON report
+echo "TEST REPORT -------------------------"
+cat "$REPORT_FILE"
+
+readlink -f "$REPORT_FILE"
+
+exit $RESULT
+
+
