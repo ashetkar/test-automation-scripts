@@ -24,11 +24,12 @@ run_test() {
     if [[ $test_name == " " ]]; then
       tc_name="default"
     else
-      tc_name=$test_name
+      tc_name="${test_name#*-Dtest=}"
+      tc_name="${tc_name%%[\":]*}"
     fi
 
     # Run the specific test case and capture errors
-    JAVA_HOME=/usr/lib/jvm/zulu-11.jdk mvn -ntp test ${test_name} 2>&1 | tee ${tc_name}.log
+    JAVA_HOME=/usr/lib/jvm/zulu-11.jdk mvn -ntp ${test_name} test 2>&1 | tee ${tc_name}.log
     
     if ! grep "BUILD SUCCESS" ${tc_name}.log; then
       # Get the lines between 'FAILURE!' and 'BUILD FAILURE' which is the stack trace
@@ -43,9 +44,9 @@ run_test() {
 echo "[" > temp_report.json
 
 echo "Running the Liquibase tests"
-run_test " "                                 "liquibase/start.sh"
-run_test "FoundationalExtensionHarnessSuite" "liquibase/start.sh"
-run_test "AdvancedExtensionHarnessSuite"     "liquibase/start.sh"
+run_test " "                                        "liquibase/start.sh"
+run_test "-Dtest=FoundationalExtensionHarnessSuite" "liquibase/start.sh"
+run_test "-Dtest=AdvancedExtensionHarnessSuite"     "liquibase/start.sh"
 
 sed -i '$ s/,$//' temp_report.json # Remove trailing comma from the last JSON object
 echo "]" >> temp_report.json
