@@ -25,6 +25,7 @@ run_test() {
       tc_name="default"
     else
       tc_name=$test_name
+    fi
 
     # Run the specific test case and capture errors
     JAVA_HOME=/usr/lib/jvm/zulu-11.jdk mvn -ntp test ${test_name} 2>&1 | tee ${tc_name}.log
