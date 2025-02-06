@@ -22,7 +22,7 @@ run_test() {
     local script_name=$2
 
     if [[ $test_name == " " ]]; then
-      tc_name="default"
+      tc_name="YugabyteDBTests"
     else
       tc_name="${test_name#*-Dtest=}"
       tc_name="${tc_name%%[\":]*}"
