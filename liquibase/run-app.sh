@@ -21,7 +21,7 @@ run_test() {
     local test_name=$1
     local script_name=$2
 
-    if [ $test_name == " " ]; then
+    if [[ $test_name == " " ]]; then
       tc_name="default"
     else
       tc_name=$test_name
