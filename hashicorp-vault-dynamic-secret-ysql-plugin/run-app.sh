@@ -27,10 +27,10 @@ if grep "FAIL:" "vault-ysql-plugin-tests.log"; then
   # Get the lines with 'FAIL'
   grep -B 1 "FAIL:" vault-ysql-plugin-tests.log > stack4json.log
   # test_name=`sed -n '/^.*FAIL:\s\+\(\w\+\).*$/s//\1/p' gocql-tests.log`
-  python $WORKSPACE/integrations/utils/create_json.py --test_name "NA" --script_name "vault-ysql-plugin-test" --result FAILED --file_path stack4json.log >> temp_report.json
+  python $WORKSPACE/integrations/utils/create_json.py --test_name "vault-ysql-plugin-tests" --script_name "hashicorp-vault-dynamic-secret-ysql-plugin/start.sh" --result FAILED --file_path stack4json.log >> temp_report.json
   RESULT=1
 else
-  python $WORKSPACE/integrations/utils/create_json.py --test_name "NA" --script_name "vault-ysql-plugin-test" --result PASSED >> temp_report.json
+  python $WORKSPACE/integrations/utils/create_json.py --test_name "vault-ysql-plugin-tests" --script_name "hashicorp-vault-dynamic-secret-ysql-plugin/start.sh" --result PASSED >> temp_report.json
 fi
 
 sed -i '$ s/,$//' temp_report.json # Remove trailing comma from the last JSON object
